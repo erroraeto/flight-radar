@@ -4,11 +4,63 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "eslint": "eslint --ext .js,.ts,.tsx ./",
+    "prettier": "prettier --write ./",
+    "prettier-check": "prettier --check ./",
+    "stylelint": "stylelint \"src/{**/*,*}.sass\"",
+    "start": "NODE_ENV=development webpack serve",
+    "build": "webpack"
   },
-  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erroraeto/flight-radar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/erroraeto/flight-radar/issues"
+  },
+  "dependencies": {
+    "@babel/cli": "7.28.3",
+    "@babel/core": "7.28.5",
+    "@babel/preset-react": "^7.28.5",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.5",
+    "@mui/material": "^7.3.5",
+    "@typescript-eslint/eslint-plugin": "^8.46.4",
+    "@typescript-eslint/parser": "^8.46.4",
+    "babel-loader": "^10.0.0",
+    "css-loader": "^7.1.2",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-webpack-plugin": "^5.0.2",
+    "html-webpack-plugin": "^5.6.4",
+    "pre-commit": "^1.2.2",
+    "prettier": "^3.6.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.6",
+    "sass": "^1.94.2",
+    "sass-loader": "^16.0.6",
+    "style-loader": "^4.0.0",
+    "stylelint": "13.13.1",
+    "stylelint-config-prettier": "^9.0.5",
+    "stylelint-config-standard": "22.0.0",
+    "stylelint-webpack-plugin": "^5.0.1",
+    "webpack": "^5.102.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  },
   "devDependencies": {
-    "typescript": "^5.5.3"
+    "@types/react": "^19.2.4",
+    "@types/react-dom": "^19.2.3",
+    "@types/react-router-dom": "^5.3.3",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3"
   },
-  "private": true
+  "pre-commit": [
+    "stylelint",
+    "eslint",
+    "prettier-check"
+  ]
 }
