@@ -1,0 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap")
+
+*,
+*::before,
+*::after
+  all: unset
+  display: revert
+  line-height: 100%
+  letter-spacing: 0
+
+:root
+  --grid-column-width: 10.1rem
+  --grid-gap: 2rem
+  --color-orange: #f53
+  --color-black: #262a2f
+  --color-grey: #868686
+  --color-white: #fff
+
+h1,
+h2,
+h3,
+p
+  color: var(--color-black)
+  display: -webkit-box
+  -webkit-line-clamp: 3
+  -webkit-box-orient: vertical
+  overflow: hidden
+  text-overflow: ellipsis
+
+h2,
+h3
+  font-weight: 700
+
+h3
+  font-size: 1.6rem
+
+p
+  font-size: 1.8rem
+
+a
+  color: var(--color-grey)
+  font-weight: 500
+
+html
+  font-size: 62.5%
+
+#root
+  font-family: "Rubik", sans-serif
+  background-color: var(--color-white)
+  font-size: 1.9rem
+  font-weight: 400
+  position: relative
+  display: grid
+  grid-template-columns: repeat(16, 1fr)
+  column-gap: var(--grid-gap)
