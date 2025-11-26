@@ -3,6 +3,7 @@ const js = require('@eslint/js');
 const prettier = require('eslint-config-prettier');
 const tseslint = require('@typescript-eslint/eslint-plugin');
 const tsParser = require('@typescript-eslint/parser');
+const globals = require('globals');
 
 module.exports = defineConfig([
   {
@@ -30,12 +31,15 @@ module.exports = defineConfig([
         ecmaVersion: 2021,
         sourceType: 'module',
       },
+      globals: {
+        ...globals.browser,
+      },
     },
     plugins: {
       '@typescript-eslint': tseslint,
     },
     rules: {
-      ...tseslint.configs.recommended.rules, // ⬅ берем только правила!
+      ...tseslint.configs.recommended.rules,
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
     },

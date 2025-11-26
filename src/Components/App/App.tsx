@@ -1,43 +1,34 @@
 import React from 'react';
 import './App.sass';
-import Map from 'react-map-gl/maplibre';
+import { Map, Map as MapLibreMap, GeolocateControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import maplibregl from 'maplibre-gl';
-import { Protocol } from 'pmtiles';
 
 export const App = () => {
+  const mapContainer = React.useRef<HTMLDivElement | null>(null);
+  const mapRef = React.useRef<MapLibreMap | null>(null);
+
   React.useEffect(() => {
-    let protocol = new Protocol();
-    maplibregl.addProtocol('pmtiles', protocol.tile);
-    return maplibregl.removeProtocol('pmtiles');
+    if (mapRef.current || !mapContainer.current) return;
+
+    mapRef.current = new Map({
+      container: mapContainer.current,
+      // style: 'https://tiles.openfreemap.org/styles/bright',
+      style: 'https://api.maptiler.com/maps/019ac1e2-7e58-7804-baec-880aab07fcd5/style.json?key=4L19oIKyIKZK0Cqronn5',
+      center: [111, 63.2],
+      zoom: 2.8,
+    });
+
+    mapRef.current.addControl(
+      new GeolocateControl({
+        positionOptions: { enableHighAccuracy: true },
+        trackUserLocation: true,
+      }),
+    );
   }, []);
 
   return (
     <React.Fragment>
-      <Map
-        style={{ width: 600, height: 400 }}
-        mapStyle={{
-          version: 8,
-          sources: {
-            sample: {
-              type: 'vector',
-              url: 'https://r2-public.protomaps.com/protomaps-sample-datasets/cb_2018_us_zcta510_500k.pmtiles',
-            },
-          },
-          layers: [
-            {
-              id: 'zcta',
-              source: 'sample',
-              'source-layer': 'zcta',
-              type: 'line',
-              paint: {
-                'line-color': '#999',
-              },
-            },
-          ],
-        }}
-        mapLib={maplibregl}
-      />
+      <div ref={mapContainer} style={{ width: '100%', height: '100vh' }} />
     </React.Fragment>
   );
 };
