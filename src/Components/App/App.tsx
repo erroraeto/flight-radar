@@ -12,8 +12,8 @@ export const App = () => {
 
     mapRef.current = new Map({
       container: mapContainer.current,
-      // style: 'https://tiles.openfreemap.org/styles/bright',
-      style: 'https://api.maptiler.com/maps/019ac1e2-7e58-7804-baec-880aab07fcd5/style.json?key=4L19oIKyIKZK0Cqronn5',
+      style: 'https://tiles.openfreemap.org/styles/bright',
+      // style: 'https://api.maptiler.com/maps/019ac1e2-7e58-7804-baec-880aab07fcd5/style.json?key=4L19oIKyIKZK0Cqronn5',
       center: [111, 63.2],
       zoom: 2.8,
     });
