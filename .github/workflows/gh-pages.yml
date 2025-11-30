@@ -17,9 +17,11 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
+        working-directory: ./frontend
         run: npm install
 
       - name: Build project
+        working-directory: ./frontend
         run: npm run build
 
       - name: Upload build folder
@@ -43,4 +45,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build_dir
+          publish_dir: ./frontend/build_dir
+#          publish_dir: ./build_dir
