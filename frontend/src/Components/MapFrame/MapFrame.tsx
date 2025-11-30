@@ -271,12 +271,12 @@ export const MapFrame = () => {
         },
       });
 
-      fetchPlanes();
-      setInterval(fetchPlanes, 5000);
+      fetchP();
+      setInterval(fetchP, 5000);
     });
   }, []);
 
-  const fetchPlanes = async () => {
+  const fetchP = async () => {
     try {
       const rawList: any = await fetchPlanes();
 
@@ -300,17 +300,11 @@ export const MapFrame = () => {
       const map = mapRef.current;
       if (!map) return;
 
-      // If style does not contain 'airport-15' symbol, MapLibre will ignore icon-image.
-      // We'll still set data; as fallback you could render HTML markers (commented below).
       const source = map.getSource("planes") as GeoJSONSource | undefined;
       if (source) {
         source.setData(geojson);
-      } else {
-        // if source missing, create HTML markers fallback:
-        // clear existing markers and add new maplibregl.Marker elements (not implemented here)
       }
     } catch (err) {
-      console.error("Failed to load planes:", err);
       throw new Error(`ADS-B API error: ${String(err)}`);
     }
   };
