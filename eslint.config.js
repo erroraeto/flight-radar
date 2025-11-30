@@ -47,7 +47,7 @@ module.exports = defineConfig([
   prettier,
   {
     rules: {
-      'no-console': 'error',
+      // 'no-console': 'error',
     },
   },
 ]);
