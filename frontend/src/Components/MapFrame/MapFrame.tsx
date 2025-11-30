@@ -3,6 +3,7 @@ import './MapFrame.sass';
 import { Map, Map as MapLibreMap, GeoJSONSource } from 'maplibre-gl';
 // import { Map, Map as MapLibreMap, GeolocateControl, NavigationControl, GeoJSONSource } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { fetchPlanes } from '../../../api/fetchPlane';
 
 // export const MapFrame = () => {
 //   const mapContainer = React.useRef<HTMLDivElement | null>(null);
@@ -276,41 +277,40 @@ export const MapFrame = () => {
   }, []);
 
   const fetchPlanes = async () => {
-    const url = 'https://public-api.adsbexchange.com/VirtualRadar/AircraftList.json';
-    const options = { method: 'GET' };
-
     try {
-      // const res = await fetch(url);
-      const res = await fetch(url, options);
-      const data = await res.json();
+      const rawList: any = await fetchPlanes();
 
-      if (!data.acList || !mapRef.current) return;
-
-      const planes = data.acList.filter((p: any) => p.Lat && p.Long);
+      // Normalize entries: some endpoints use Lat/Long, others latitude/longitude
+      const features = rawList.map((p: any) => {
+        const lat = p.Lat ?? p.latitude ?? p[2] ?? null;
+        const lon = p.Long ?? p.longitude ?? p[3] ?? null;
+        const direction = p.Trak ?? p.direction ?? p.heading ?? p[4] ?? 0;
+        return { lat, lon, direction, raw: p };
+      }).filter( (x: any) => x.lat != null && x.lon != null);
 
       const geojson: any = {
-        type: 'FeatureCollection',
-        features: planes.map((p: any) => ({
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [p.Long, p.Lat],
-          },
-          properties: {
-            callsign: p.Call,
-            direction: p.Trak || 0,
-            altitude: p.Alt,
-            speed: p.Spd,
-            type: p.Type,
-            from: p.From,
-            to: p.To,
-          },
+        type: "FeatureCollection",
+        features: features.map( (f: any) => ({
+          type: "Feature",
+          geometry: { type: "Point", coordinates: [f.lon, f.lat] },
+          properties: { direction: f.direction, raw: f.raw },
         })),
       };
 
-      const source = mapRef.current.getSource('planes') as GeoJSONSource;
-      source.setData(geojson);
+      const map = mapRef.current;
+      if (!map) return;
+
+      // If style does not contain 'airport-15' symbol, MapLibre will ignore icon-image.
+      // We'll still set data; as fallback you could render HTML markers (commented below).
+      const source = map.getSource("planes") as GeoJSONSource | undefined;
+      if (source) {
+        source.setData(geojson);
+      } else {
+        // if source missing, create HTML markers fallback:
+        // clear existing markers and add new maplibregl.Marker elements (not implemented here)
+      }
     } catch (err) {
+      console.error("Failed to load planes:", err);
       throw new Error(`ADS-B API error: ${String(err)}`);
     }
   };
