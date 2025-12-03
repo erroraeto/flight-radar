@@ -1,12 +1,13 @@
 import React from 'react';
 import './MapFrame.sass';
-import { Map, Map as MapLibreMap, GeolocateControl, NavigationControl, GeoJSONSource } from 'maplibre-gl';
+import { Map, GeolocateControl, NavigationControl, GeoJSONSource, Marker, Popup } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 export const MapFrame = () => {
-  const mapContainer = React.useRef<HTMLDivElement | null>(null);
-  const mapRef = React.useRef<MapLibreMap | null>(null);
-  const userPos = React.useRef<{ lat: number; lon: number } | null>(null);
+  const mapContainer = React.useRef<HTMLDivElement>(null);
+  const mapRef = React.useRef<Map>(null);
+  const markerRef: React.RefObject<any> = React.useRef(null);
+  const userPos = React.useRef<{ lat: number; lon: number }>(null);
 
   React.useEffect(() => {
     if (!mapContainer.current) return;
@@ -19,13 +20,19 @@ export const MapFrame = () => {
       maxZoom: 18,
     }));
 
+    markerRef.current = new Marker().setLngLat([12.550343, 55.665957]).addTo(map);
+
+    // map.dragRotate.disable();
+    // map.keyboard.disable();
+    // map.doubleClickZoom.disable();
+    // map.touchZoomRotate.disableRotation();
+    // map.dragPan.disable();
+    // map.touchZoomRotate.disable();
+    // map.scrollZoom.disable();
+
     map.addControl(new NavigationControl());
 
-    map.addControl(
-      new GeolocateControl({
-        trackUserLocation: true
-      })
-    );
+    map.addControl(new GeolocateControl({ trackUserLocation: true }));
 
     map.on('load', () => {
       map.addSource('planes', {
@@ -51,11 +58,22 @@ export const MapFrame = () => {
 
       initUserLocation();
     });
+
+    map.on('click', 'places', (e: any) => {
+      if (!e.features || !e.features[0]) return;
+      const coordinates = e.features[0].geometry.coordinates as [number, number];
+      const description = e.features[0].properties.description;
+
+      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+      }
+
+      new Popup().setLngLat(coordinates).setHTML(description).addTo(map);
+    });
   }, []);
 
   const initUserLocation = () => {
     if (!navigator.geolocation) {
-      console.warn("Geolocation not supported");
       startAutoUpdate(55.7558, 37.6176);
       return;
     }
@@ -69,13 +87,14 @@ export const MapFrame = () => {
 
         mapRef.current?.setCenter([lon, lat]);
         mapRef.current?.setZoom(9);
+        markerRef.current?.setLngLat([lon, lat]);
 
         startAutoUpdate(lat, lon);
       },
       () => {
-        console.warn("Geolocation denied, using fallback");
+        console.warn('Geolocation denied, using fallback');
         startAutoUpdate(55.7558, 37.6176);
-      }
+      },
     );
   };
 
@@ -102,7 +121,7 @@ export const MapFrame = () => {
         type: plane.t,
       }));
     } catch (error) {
-      console.error("Plane API error:", error);
+      console.error('Plane API error:', error);
       return [];
     }
   };
@@ -112,29 +131,70 @@ export const MapFrame = () => {
     if (!mapRef.current) return;
 
     const geojson: any = {
-      type: "FeatureCollection",
+      type: 'FeatureCollection',
       features: rawPlanes
-        .filter( (p: any) => p.lat && p.lon)
-        .map( (p: any) => ({
-          type: "Feature",
+        .filter((p: any) => p.lat && p.lon)
+        .map((p: any) => ({
+          type: 'Feature',
           geometry: {
-            type: "Point",
+            type: 'Point',
             coordinates: [p.lon, p.lat],
           },
           properties: {
+            description: `<strong>${p.callsign}</strong><br/>
+              <b>Type</b> ${p.type || '—'}<br/>
+              <b>Height</b> ${p.alt || '—'}<br/>
+              <b>Speed</b> ${p.speed || '—'}<br/>
+              <b>Speed</b> ${p.track || '—'}<br/>`,
             direction: p.track ?? 0,
             flight: p.callsign,
             type: p.type,
-            icao: p.icao
+            icao: p.icao,
           },
-        }))
+        })),
     };
 
-    const source = mapRef.current.getSource("planes") as GeoJSONSource;
+    const source = mapRef.current.getSource('planes') as GeoJSONSource;
     source.setData(geojson);
   };
 
+  const setMapLanguage = (map: Map, lang: string) => {
+    if (!map) return;
+    const nameField = `name:${lang}`;
 
+    map.getStyle().layers.forEach((layer) => {
+      if (
+        layer.type === 'symbol' &&
+        layer.layout &&
+        (layer.layout['text-field'] || layer.layout['text-field'] === '')
+      ) {
+        map.setLayoutProperty(layer.id, 'text-field', ['coalesce', ['get', nameField], ['get', 'name']]);
+      }
+    });
+  };
 
-  return <div className="map-frame" ref={mapContainer} style={{ width: '100%', height: '100vh' }} />;
+  return (
+    <div className="map-frame" ref={mapContainer} style={{ width: '100%', height: '100vh' }}>
+      <div className="language-switcher">
+        <select
+          className="language-switcher__select"
+          name="lang"
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setMapLanguage(mapRef.current!, e.target.value)}
+        >
+          <option value="" selected>
+            -- Выберите язык --
+          </option>
+          <option value="ru">Русский</option>
+          <option value="en">English</option>
+          <option value="es">Español</option>
+          <option value="de">Deutsch</option>
+          <option value="kk">Қазақша</option>
+          <option value="ja">日本語</option>
+          <option value="fr">Français</option>
+          <option value="zh">中文</option>
+          <option value="ko">한국어</option>
+        </select>
+      </div>
+    </div>
+  );
 };
