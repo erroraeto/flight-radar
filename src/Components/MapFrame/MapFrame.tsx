@@ -9,6 +9,42 @@ export const MapFrame = () => {
   const markerRef: React.RefObject<any> = React.useRef(null);
   const userPos = React.useRef<{ lat: number; lon: number }>(null);
 
+  const activePlane = React.useRef<any>(null);
+  const popupRef = React.useRef<Popup>(null);
+  const popupHTML = (p: any) => `
+    <div style="font-size:13px">
+      <strong>${getRegionFromHex(p.icao) || '?'}</strong><br/>
+      <b>Type:</b> ${p.type || '—'}<br/>
+      <b>Speed:</b> ${p.speed ? p.speed + ' km/h' : '—'}<br/>
+      <b>Altitude:</b> ${p.alt ? p.alt + ' m' : '—'}<br/>
+      <b>Track:</b> ${p.direction ?? '—'}°
+    </div>
+  `;
+  const ICAO_COUNTRIES: Record<string, string> = {
+    '424': 'Russia',
+    '43F': 'Russia',
+    '508': 'Kazakhstan',
+    '511': 'Belarus',
+    '514': 'Ukraine',
+    '400': 'United Kingdom',
+    '3D0': 'Germany',
+    '344': 'France',
+    '45C': 'Spain',
+    '06A': 'Italy',
+    '780': 'China',
+    '800': 'Japan',
+    '71C': 'South Korea',
+    A00: 'USA',
+    A20: 'USA',
+    C00: 'Canada',
+  };
+
+  const getRegionFromHex = (hex: string): string => {
+    if (!hex) return 'Unknown';
+    const prefix = hex.substring(0, 3).toUpperCase();
+    return ICAO_COUNTRIES[prefix] ?? 'Unknown';
+  };
+
   React.useEffect(() => {
     if (!mapContainer.current) return;
 
@@ -37,10 +73,7 @@ export const MapFrame = () => {
     map.on('load', () => {
       map.addSource('planes', {
         type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: [],
-        },
+        data: { type: 'FeatureCollection', features: [] },
       });
 
       map.addLayer({
@@ -56,19 +89,38 @@ export const MapFrame = () => {
         },
       });
 
+      map.on('click', 'planes-layer', (e: any) => {
+        const features: any = map.queryRenderedFeatures(e.point, {
+          layers: ['planes-layer'],
+        });
+        if (!features || !features[0]) return;
+
+        const feature = features[0];
+        const props = feature.properties!;
+        const coords = feature.geometry.coordinates.slice();
+
+        activePlane.current = props;
+
+        if (!popupRef.current) {
+          popupRef.current = new Popup({ closeOnClick: false });
+        }
+
+        popupRef.current.setLngLat(coords).setHTML(popupHTML(props)).addTo(map);
+
+        popupRef.current?.on('close', () => {
+          activePlane.current = null;
+        });
+      });
+
+      map.on('mouseenter', 'planes-layer', () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.on('mouseleave', 'planes-layer', () => {
+        map.getCanvas().style.cursor = '';
+      });
+
       initUserLocation();
-    });
-
-    map.on('click', 'places', (e: any) => {
-      if (!e.features || !e.features[0]) return;
-      const coordinates = e.features[0].geometry.coordinates as [number, number];
-      const description = e.features[0].properties.description;
-
-      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-      }
-
-      new Popup().setLngLat(coordinates).setHTML(description).addTo(map);
     });
   }, []);
 
@@ -136,26 +188,33 @@ export const MapFrame = () => {
         .filter((p: any) => p.lat && p.lon)
         .map((p: any) => ({
           type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [p.lon, p.lat],
-          },
+          geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
           properties: {
-            description: `<strong>${p.callsign}</strong><br/>
-              <b>Type</b> ${p.type || '—'}<br/>
-              <b>Height</b> ${p.alt || '—'}<br/>
-              <b>Speed</b> ${p.speed || '—'}<br/>
-              <b>Speed</b> ${p.track || '—'}<br/>`,
-            direction: p.track ?? 0,
-            flight: p.callsign,
-            type: p.type,
             icao: p.icao,
+            direction: p.track ?? 0,
+            flight: p.callsign ?? null,
+            type: p.type ?? null,
+            alt: p.alt ?? null,
+            speed: p.speed ?? null,
+            icon: 'oneway_black',
           },
         })),
     };
 
     const source = mapRef.current.getSource('planes') as GeoJSONSource;
     source.setData(geojson);
+
+    if (activePlane.current && popupRef.current) {
+      const updated = rawPlanes.find((p: any) => p.callsign === activePlane.current.flight);
+
+      if (!updated) {
+        popupRef.current.remove();
+        activePlane.current = null;
+        return;
+      }
+
+      popupRef.current.setLngLat([updated.lon, updated.lat]).setHTML(popupHTML(updated));
+    }
   };
 
   const setMapLanguage = (map: Map, lang: string) => {
