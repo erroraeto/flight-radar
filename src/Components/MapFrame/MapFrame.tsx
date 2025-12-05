@@ -2,6 +2,7 @@ import React from 'react';
 import './MapFrame.sass';
 import { Map, GeolocateControl, NavigationControl, GeoJSONSource, Marker, Popup } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { ICAO_NATIONALITY_MARKS } from '../../utils';
 
 export const MapFrame = () => {
   const mapContainer = React.useRef<HTMLDivElement>(null);
@@ -12,38 +13,20 @@ export const MapFrame = () => {
   const activePlane = React.useRef<any>(null);
   const popupRef = React.useRef<Popup>(null);
   const popupHTML = (p: any) => `
-    <div style="font-size:13px">
-      <strong>${getRegionFromHex(p.icao) || '?'}</strong><br/>
-      <b>Type:</b> ${p.type || '—'}<br/>
-      <b>Speed:</b> ${p.speed ? p.speed + ' km/h' : '—'}<br/>
-      <b>Altitude:</b> ${p.alt ? p.alt + ' m' : '—'}<br/>
-      <b>Track:</b> ${p.direction ?? '—'}°
+    <div class="map-frame__popup-text">
+      <strong>Регион: ${getCountryByRegistration(p.reg) ?? '—'}</strong><br/>
+      <b>Скорость:</b> ${p.speed ? p.speed + ' км/ч' : '—'}<br/>
+      <b>Высота:</b> ${p.alt ? p.alt + ' м' : '—'}<br/>
     </div>
   `;
-  const ICAO_COUNTRIES: Record<string, string> = {
-    '424': 'Russia',
-    '43F': 'Russia',
-    '508': 'Kazakhstan',
-    '511': 'Belarus',
-    '514': 'Ukraine',
-    '400': 'United Kingdom',
-    '3D0': 'Germany',
-    '344': 'France',
-    '45C': 'Spain',
-    '06A': 'Italy',
-    '780': 'China',
-    '800': 'Japan',
-    '71C': 'South Korea',
-    A00: 'USA',
-    A20: 'USA',
-    C00: 'Canada',
-  };
 
-  const getRegionFromHex = (hex: string): string => {
-    if (!hex) return 'Unknown';
-    const prefix = hex.substring(0, 3).toUpperCase();
-    return ICAO_COUNTRIES[prefix] ?? 'Unknown';
-  };
+  function getCountryByRegistration(reg: string): string {
+    const prefix = reg.slice(0, 2).replace(/[^a-zA-Z0-9]/g, '');
+    console.log(prefix);
+    const code = prefix.toUpperCase();
+    console.log(code);
+    return ICAO_NATIONALITY_MARKS[code] ?? 'Неизвестно';
+  }
 
   React.useEffect(() => {
     if (!mapContainer.current) return;
@@ -71,6 +54,19 @@ export const MapFrame = () => {
     map.addControl(new GeolocateControl({ trackUserLocation: true }));
 
     map.on('load', () => {
+      const svgImage = new Image(28, 28);
+      svgImage.onload = () => {
+        map.addImage('airplane', svgImage);
+      };
+
+      const planeSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="none">
+        <g>
+          <path fill="#0058ff" stroke-linecap="round" stroke-linejoin="round" stroke="#000000" stroke-width="0.7" d="M21 16.2632V14.3684L13.4211 9.63158V4.42105C13.4211 3.63474 12.7863 3 12 3C11.2137 3 10.5789 3.63474 10.5789 4.42105V9.63158L3 14.3684V16.2632L10.5789 13.8947V19.1053L8.68421 20.5263V21.9474L12 21L15.3158 21.9474V20.5263L13.4211 19.1053V13.8947L21 16.2632Z"/>
+        </g>
+      </svg>`;
+
+      svgImage.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(planeSVG);
+
       map.addSource('planes', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: [] },
@@ -81,7 +77,7 @@ export const MapFrame = () => {
         type: 'symbol',
         source: 'planes',
         layout: {
-          'icon-image': 'oneway_black',
+          'icon-image': 'airplane',
           'icon-size': 1.3,
           'icon-allow-overlap': true,
           'icon-rotate': ['get', 'direction'],
@@ -99,10 +95,10 @@ export const MapFrame = () => {
         const props = feature.properties!;
         const coords = feature.geometry.coordinates.slice();
 
-        activePlane.current = props;
+        activePlane.current = props.hex;
 
         if (!popupRef.current) {
-          popupRef.current = new Popup({ closeOnClick: false });
+          popupRef.current = new Popup({ className: 'map-frame__popup', closeButton: false, offset: 10 });
         }
 
         popupRef.current.setLngLat(coords).setHTML(popupHTML(props)).addTo(map);
@@ -159,18 +155,16 @@ export const MapFrame = () => {
     try {
       const radius = 350;
       const response = await fetch(`https://api.airplanes.live/v2/point/${lat}/${lon}/${radius}`);
-
       const data = await response.json();
-
       return data.ac.map((plane: any) => ({
         lat: plane.lat,
         lon: plane.lon,
-        alt: plane.alt_baro,
-        speed: plane.gs,
-        track: plane.track,
-        callsign: plane.flight,
-        icao: plane.hex,
+        hex: plane.hex,
+        reg: plane.r,
         type: plane.t,
+        speed: plane.gs,
+        alt: plane.alt_baro,
+        direction: plane.track ?? plane.dir ?? 0,
       }));
     } catch (error) {
       console.error('Plane API error:', error);
@@ -190,13 +184,13 @@ export const MapFrame = () => {
           type: 'Feature',
           geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
           properties: {
-            icao: p.icao,
-            direction: p.track ?? 0,
-            flight: p.callsign ?? null,
-            type: p.type ?? null,
-            alt: p.alt ?? null,
-            speed: p.speed ?? null,
+            hex: p.hex ?? null,
+            reg: p.reg ?? null,
             icon: 'oneway_black',
+            type: p.type ?? null,
+            speed: p.speed ?? null,
+            alt: p.alt ?? null,
+            direction: p.direction,
           },
         })),
     };
@@ -205,7 +199,7 @@ export const MapFrame = () => {
     source.setData(geojson);
 
     if (activePlane.current && popupRef.current) {
-      const updated = rawPlanes.find((p: any) => p.callsign === activePlane.current.flight);
+      const updated = rawPlanes.find((p: any) => p.hex === activePlane.current);
 
       if (!updated) {
         popupRef.current.remove();
