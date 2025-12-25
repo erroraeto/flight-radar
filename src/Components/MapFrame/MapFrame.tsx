@@ -11,7 +11,15 @@
 // import rawPlanes from './rawPlanes.json';
 import React from 'react';
 import './MapFrame.sass';
-import { Map, NavigationControl, FullscreenControl, ScaleControl, Marker, Popup, GeolocateControl } from 'react-map-gl/maplibre';
+import {
+  Map,
+  NavigationControl,
+  FullscreenControl,
+  ScaleControl,
+  Marker,
+  Popup,
+  GeolocateControl,
+} from 'react-map-gl/maplibre';
 import { MapGLStyleSwitcher, type StyleItem } from 'map-gl-style-switcher/react-map-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import Plane from '../MapFrame/Plane';
@@ -21,14 +29,12 @@ import { getCountryByICAO } from './getByICAO';
 type Language = 'en' | 'ru' | 'kk' | 'ja';
 
 export const MapFrame = () => {
-
   const lang = React.useRef<Language>('ru');
   const mapStyles: StyleItem[] = [
     {
       id: 'light',
       name: 'Light',
-      image:
-        'https://raw.githubusercontent.com/muimsd/map-gl-style-switcher/refs/heads/main/public/voyager.png',
+      image: 'https://raw.githubusercontent.com/muimsd/map-gl-style-switcher/refs/heads/main/public/voyager.png',
       styleUrl: `https://basemaps.cartocdn.com/gl/positron-gl-style/style.json`,
       // styleUrl: `https://api.protomaps.com/styles/v5/light/${lang.current}.json?key=015bfa5ea24fa6b9`,
       description: 'Voyager style from Carto',
@@ -36,20 +42,16 @@ export const MapFrame = () => {
     {
       id: 'dark',
       name: 'Dark',
-      image:
-        'https://raw.githubusercontent.com/muimsd/map-gl-style-switcher/refs/heads/main/public/positron.png',
+      image: 'https://raw.githubusercontent.com/muimsd/map-gl-style-switcher/refs/heads/main/public/positron.png',
       styleUrl: `https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json`,
       // styleUrl: `https://api.protomaps.com/styles/v5/dark/${lang.current}.json?key=015bfa5ea24fa6b9`,
       description: 'Positron style from Carto',
-    }
+    },
   ];
   const [mapStyle, setMapStyle] = React.useState(mapStyles[0].styleUrl);
   const [activeStyleId, setActiveStyleId] = React.useState(mapStyles[0].id);
   const [isDarkMode, setIsDarkMode] = React.useState(() => {
-    return (
-      window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    );
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
   React.useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -62,7 +64,7 @@ export const MapFrame = () => {
   }, []);
   const handleStyleChange = (styleUrl: string) => {
     setMapStyle(styleUrl);
-    const style = mapStyles.find(s => s.styleUrl === styleUrl);
+    const style = mapStyles.find((s) => s.styleUrl === styleUrl);
     if (style) {
       setActiveStyleId(style.id);
       console.log(`Style changed to: ${style.name}`);
@@ -80,7 +82,7 @@ export const MapFrame = () => {
   const [selectPlaneHex, setPlaneHex] = React.useState<string | null>(null);
 
   const timer = React.useRef<number>(null);
-  React.useEffect( () => {
+  React.useEffect(() => {
     if (!geolocate) return;
 
     const loadPlanes = async () => {
@@ -94,7 +96,7 @@ export const MapFrame = () => {
           latitude={p.lat}
           rotation={p.direction}
           anchor="bottom"
-          onClick={e => {
+          onClick={(e) => {
             e.originalEvent.stopPropagation();
             setPlaneHex(p.hex);
           }}
@@ -110,15 +112,12 @@ export const MapFrame = () => {
       clearInterval(timer.current);
     }
     timer.current = window.setInterval(loadPlanes, 2000);
-
-  },[geolocate])
-
+  }, [geolocate]);
 
   const activePlane: any = React.useMemo(() => {
     if (!selectPlaneHex) return null;
-    return rawPlanes?.find( (p: any) => p.hex === selectPlaneHex ) ?? null;
+    return rawPlanes?.find((p: any) => p.hex === selectPlaneHex) ?? null;
   }, [rawPlanes, selectPlaneHex]);
-
 
   return (
     <Map
@@ -185,27 +184,6 @@ export const MapFrame = () => {
     </Map>
   );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // const lang = React.useRef<Language>('ru');
   // const mapStyles = {
   //   light: {
@@ -219,7 +197,6 @@ export const MapFrame = () => {
   //     image: 'https://carto.com/help/images/building-maps/basemaps/dark_labels.png',
   //   },
   // };
-
 
   // const mapContainer = React.useRef<HTMLDivElement>(null);
   // const mapRef = React.useRef<Map>(null);
