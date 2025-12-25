@@ -7,7 +7,7 @@ const globals = require('globals');
 
 module.exports = defineConfig([
   {
-    ignores: ['dist/', 'node_modules/', 'README.md'],
+    ignores: ['dist/', 'node_modules/', 'README.md', '.netlify/'],
   },
   {
     languageOptions: {
