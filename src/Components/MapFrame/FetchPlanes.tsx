@@ -5,7 +5,7 @@ export const fetchPlanes = async (lat: number, lon: number) => {
       `https://stalwart-ganache-e22d49.netlify.app/.netlify/functions/adsb?lat=${lat}&lon=${lon}&dist=${radius}`,
     );
     const data = await response.json();
-    return data.map((plane: any) => ({
+    return data.ac.map((plane: any) => ({
       lat: plane.lat,
       lon: plane.lon,
       hex: plane.hex,
