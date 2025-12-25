@@ -3,7 +3,8 @@ declare module '*.svg' {
   export default content;
 }
 
-// declare module 'maplibre-gl-style-flipper' {
-//   const value: any;
-//   export default value;
-// }
+declare module '*.webp';
+declare module '*.png';
+declare module '*.jpg';
+declare module '*.jpeg';
+declare module '*.gif';

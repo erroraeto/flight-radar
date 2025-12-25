@@ -1,11 +1,11 @@
 export const fetchPlanes = async (lat: number, lon: number) => {
   try {
     const radius = 350;
-    // const response = await fetch(`https://api.adsb.lol/v2/lat/${lat}/lon/${lon}/dist/${radius}`);
-    // const response = await fetch(`/adsb/v2/lat/${lat}/lon/${lon}/dist/${radius}`);
-    const response = await fetch(`https://stalwart-ganache-e22d49.netlify.app/.netlify/functions/adsb?lat=${lat}&lon=${lon}&dist=${radius}`);
+    const response = await fetch(
+      `https://stalwart-ganache-e22d49.netlify.app/.netlify/functions/adsb?lat=${lat}&lon=${lon}&dist=${radius}`,
+    );
     const data = await response.json();
-    return data.ac.map((plane: any) => ({
+    return data.map((plane: any) => ({
       lat: plane.lat,
       lon: plane.lon,
       hex: plane.hex,
