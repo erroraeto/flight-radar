@@ -8,5 +8,5 @@
     "moduleResolution": "bundler"
   },
   "include": ["src"],
-  "exclude": ["node-modules", "dist"]
+  "exclude": ["node-modules", "dist", "netlify"]
 }
