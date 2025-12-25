@@ -21,7 +21,10 @@
   padding: 10px !important
 
 .maplibregl-popup-tip
-  border-top-color: currentColor !important
+  //border-color: currentColor !important
+  border-bottom-color: currentColor !important
+
+//.maplibregl-popup-anchor-top
 
 .language-switcher
   position: absolute
@@ -34,3 +37,12 @@
   background-color: #18191c
   color: #fff
   cursor: pointer
+
+//.theme-changer
+
+.plane
+  cursor: pointer
+  fill: #4d4d4d
+  filter: drop-shadow(0 0 9px rgba(0, 0, 0, 0.5))
+  *
+    all: revert-layer

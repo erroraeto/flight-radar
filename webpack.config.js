@@ -48,5 +48,16 @@ module.exports = {
   ],
   devServer: {
     open: true,
+    port: 3000,
+    historyApiFallback: true,
+    proxy: [
+      {
+        context: ['/adsb'], // все запросы, начинающиеся с /adsb
+        target: 'https://api.adsb.lol',
+        changeOrigin: true,
+        secure: true,
+        pathRewrite: { '^/adsb': '' },
+      },
+    ],
   },
 };

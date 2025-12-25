@@ -3,7 +3,9 @@
     "strict": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "jsx": "react"
+    "jsx": "react",
+    "module": "ESNext",
+    "moduleResolution": "bundler"
   },
   "include": ["src"],
   "exclude": ["node-modules", "dist"]

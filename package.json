@@ -8,7 +8,7 @@
     "prettier": "prettier --write ./",
     "prettier-check": "prettier --check ./",
     "stylelint": "stylelint \"src/{**/*,*}.sass\"",
-    "start": "NODE_ENV=development webpack serve",
+    "start": "webpack serve --mode development",
     "build": "webpack"
   },
   "repository": {
@@ -37,7 +37,9 @@
     "globals": "^16.5.0",
     "html-webpack-plugin": "^5.6.4",
     "i18next": "^25.7.1",
+    "map-gl-style-switcher": "^0.9.1",
     "maplibre-gl": "^5.13.0",
+    "maplibre-gl-style-flipper": "^1.0.9",
     "pmtiles": "^4.3.0",
     "pre-commit": "^1.2.2",
     "prettier": "^3.6.2",
