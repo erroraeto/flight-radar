@@ -45,8 +45,12 @@
 
 .plane
   cursor: pointer
-  fill: #4d4d4d
+  fill: #404040
   filter: drop-shadow(0 0 9px rgba(0, 0, 0, 0.5))
+
+[data-theme="dark"] .plane
+  fill: white
+  filter: drop-shadow(0 0 9px rgba(255, 255, 255, 0.5))
 
 .plane *
   all: revert-layer

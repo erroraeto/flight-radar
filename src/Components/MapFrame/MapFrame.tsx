@@ -99,7 +99,7 @@ export const MapFrame = () => {
   const activePlane: any = React.useMemo(() => {
     if (!selectPlaneHex) return null;
     return rawPlanes?.find((p: any) => p.hex === selectPlaneHex) ?? null;
-  }, [rawPlanes, selectPlaneHex]);
+  }, [rawPlanes, selectPlaneHex, mapStyle]);
 
   return (
     <div className="map-frame" data-theme={isDarkMode ? 'dark' : 'light'}>
@@ -156,9 +156,18 @@ export const MapFrame = () => {
             onClose={() => setPlaneHex(null)}
           >
             <div className="popup-info">
-              <p className="popup-info__row"><span>Region:</span><span>{getCountryByICAO(activePlane.reg, lang.current) ?? 'Unknown'}</span></p>
-              <p className="popup-info__row"><span>Speed:</span><span>{Math.round(activePlane.speed)} км/ч</span></p>
-              <p className="popup-info__row"><span>Altitude:</span><span>{Math.round(activePlane.alt * 0.3048)} м</span></p>
+              <p className="popup-info__row">
+                <span>Region:</span>
+                <span>{getCountryByICAO(activePlane.reg, lang.current) ?? 'Unknown'}</span>
+              </p>
+              <p className="popup-info__row">
+                <span>Speed:</span>
+                <span>{Math.round(activePlane.speed)} км/ч</span>
+              </p>
+              <p className="popup-info__row">
+                <span>Altitude:</span>
+                <span>{Math.round(activePlane.alt * 0.3048)} м</span>
+              </p>
             </div>
           </Popup>
         )}
