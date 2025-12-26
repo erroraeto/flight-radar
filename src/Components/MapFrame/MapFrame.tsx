@@ -102,84 +102,67 @@ export const MapFrame = () => {
   }, [rawPlanes, selectPlaneHex]);
 
   return (
-    <Map
-      key={mapStyle}
-      {...viewState}
-      onMove={(evt) => setViewState(evt.viewState)}
-      maxZoom={18}
-      style={{
-        width: '100%',
-        height: '100vh',
-        backgroundColor: isDarkMode ? '#404040' : '#f5f5f5',
-      }}
-      mapStyle={mapStyle}
-    >
-      <NavigationControl
-        position="top-left"
+    <div className="map-frame" data-theme={isDarkMode ? 'dark' : 'light'}>
+      <Map
+        key={mapStyle}
+        {...viewState}
+        onMove={(evt) => setViewState(evt.viewState)}
+        maxZoom={18}
         style={{
-          filter: isDarkMode ? 'invert(1) contrast(0.5)' : 'invert(0)',
-          // backgroundColor: isDarkMode ? '#404040' : '#f5f5f5',
+          width: '100%',
+          height: '100vh',
+          backgroundColor: isDarkMode ? '#404040' : '#f5f5f5',
         }}
-      />
-      <GeolocateControl
-        position="top-left"
-        style={{
-          filter: isDarkMode ? 'invert(1) contrast(0.5)' : 'invert(0)',
-          // backgroundColor: isDarkMode ? '#404040' : '#f5f5f5',
-        }}
-        trackUserLocation={true}
-        onGeolocate={(e) => {
-          const { latitude, longitude } = e.coords;
-          setGeolocate([latitude, longitude]);
+        mapStyle={mapStyle}
+      >
+        <NavigationControl position="top-left" />
+        <GeolocateControl
+          position="top-left"
+          trackUserLocation={true}
+          onGeolocate={(e) => {
+            const { latitude, longitude } = e.coords;
+            setGeolocate([latitude, longitude]);
 
-          setViewState((vs) => ({
-            ...vs,
-            latitude,
-            longitude,
-          }));
-        }}
-      />
-      <FullscreenControl
-        position="top-left"
-        style={{
-          filter: isDarkMode ? 'invert(1) contrast(0.5)' : 'invert(0)',
-          // backgroundColor: isDarkMode ? '#404040' : '#f5f5f5',
-        }}
-      />
-      <ScaleControl />
+            setViewState((vs) => ({
+              ...vs,
+              latitude,
+              longitude,
+            }));
+          }}
+        />
+        <FullscreenControl position="top-left" />
+        <ScaleControl />
 
-      <MapGLStyleSwitcher
-        styles={mapStyles}
-        activeStyleId={activeStyleId}
-        theme={isDarkMode ? 'dark' : 'light'}
-        showLabels={true}
-        showImages={true}
-        position="bottom-left"
-        onBeforeStyleChange={(from, to) => {
-          console.log(`Switching from ${from.name} to ${to.name}`);
-        }}
-        onStyleChange={handleStyleChange}
-      />
-      {markers}
+        <MapGLStyleSwitcher
+          styles={mapStyles}
+          activeStyleId={activeStyleId}
+          theme={isDarkMode ? 'dark' : 'light'}
+          showLabels={true}
+          showImages={true}
+          position="bottom-left"
+          onBeforeStyleChange={(from, to) => {
+            console.log(`Switching from ${from.name} to ${to.name}`);
+          }}
+          onStyleChange={handleStyleChange}
+        />
+        {markers}
 
-      {activePlane && (
-        <Popup
-          anchor="top"
-          longitude={Number(activePlane.lon)}
-          latitude={Number(activePlane.lat)}
-          onClose={() => setPlaneHex(null)}
-        >
-          <div className="map-frame__popup-text">
-            <strong>{getCountryByICAO(activePlane.reg, lang.current) ?? 'Unknow'}</strong>
-            <br />
-            <b>speed:</b>
-            {Math.round(activePlane.speed)} км/ч
-            <br />
-            <b>altitude:</b>
-            {Math.round(activePlane.alt * 0.3048)} м<br />
-          </div>
-        </Popup>
-      )}
-    </Map>
+        {activePlane && (
+          <Popup
+            anchor="top"
+            longitude={Number(activePlane.lon)}
+            latitude={Number(activePlane.lat)}
+            closeButton={false}
+            onClose={() => setPlaneHex(null)}
+          >
+            <div className="popup-info">
+              <p className="popup-info__row"><span>Region:</span><span>{getCountryByICAO(activePlane.reg, lang.current) ?? 'Unknown'}</span></p>
+              <p className="popup-info__row"><span>Speed:</span><span>{Math.round(activePlane.speed)} км/ч</span></p>
+              <p className="popup-info__row"><span>Altitude:</span><span>{Math.round(activePlane.alt * 0.3048)} м</span></p>
+            </div>
+          </Popup>
+        )}
+      </Map>
+    </div>
   );
 };
