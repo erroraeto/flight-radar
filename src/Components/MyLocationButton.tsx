@@ -17,9 +17,14 @@ export const MyLocationButton: FC<GeoProps> = ({ status }) => {
     case 'searching':
       return <GpsNotFixed fontSize="small" />;
     case 'fixed':
-      return <GpsFixed sx={{
-        color: '#036fe2',
-      }} fontSize="small" />;
+      return (
+        <GpsFixed
+          sx={{
+            color: '#036fe2',
+          }}
+          fontSize="small"
+        />
+      );
     default:
       return <GpsNotFixed fontSize="small" />;
   }

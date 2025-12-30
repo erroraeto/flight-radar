@@ -5,7 +5,7 @@ export const DividerH = () => (
   <Box
     sx={{
       height: 2,
-      bgcolor: "divider",
+      bgcolor: 'divider',
     }}
   />
 );
@@ -14,7 +14,7 @@ export const DividerV = () => (
   <Box
     sx={{
       width: 2,
-      bgcolor: "divider",
+      bgcolor: 'divider',
     }}
   />
 );

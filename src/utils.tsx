@@ -6,10 +6,16 @@ type IcaoNationalityMark = {
   ja: string;
 };
 
-export type GeoStatus = "off" | "searching" | "fixed";
+export type GeoStatus = 'off' | 'searching' | 'fixed';
 
 export const ICAO_NATIONALITY_MARKS: IcaoNationalityMark[] = [
-  { codes: [ '14', '15', 'RA', 'UU', 'UL', 'UW', 'UR', 'UE', 'UF', 'UH', 'UI'], en: 'Russia', ru: 'Россия', kk: 'Ресей', ja: 'ロシア' },
+  {
+    codes: ['14', '15', 'RA', 'UU', 'UL', 'UW', 'UR', 'UE', 'UF', 'UH', 'UI'],
+    en: 'Russia',
+    ru: 'Россия',
+    kk: 'Ресей',
+    ja: 'ロシア',
+  },
   { codes: ['YA', 'A4'], en: 'Afghanistan', ru: 'Афганистан', kk: 'Ауғанстан', ja: 'アフガニスタン' },
   { codes: ['ZA'], en: 'Albania', ru: 'Албания', kk: 'Албания', ja: 'アルバニア' },
   { codes: ['7T'], en: 'Algeria', ru: 'Алжир', kk: 'Алжир', ja: 'アルジェリア' },
@@ -170,41 +176,42 @@ export const ICAO_NATIONALITY_MARKS: IcaoNationalityMark[] = [
 ];
 
 export const ThemeDark = {
-    "theme": "modern",
-    "icons": "lucide",
-    "cssVars": {
-    "light": {
-      "--ml-ctrl-border-radius": "1rem",
-        "--ml-font": "16px/24px system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Open Sans\", \"Helvetica Neue\", sans-serif",
-        "--ml-font-attribution": "inherit",
-        "--ml-c-bg-1": "#ffffff",
-        "--ml-c-bg-2": "#f0f0f0",
-        "--ml-c-bg-3": "#d7d7d7",
-        "--ml-c-icon-1": "#333333",
-        "--ml-c-icon-2": "#000000",
-        "--ml-c-active": "#1da1f2",
-        "--ml-c-error": "#e54e33",
-        "--ml-c-outline": "#dba726",
-        "--ml-o-disabled": "0.25",
-        "--ml-shadow": "0 1px 3px 0 rgb(0 0 0 / 0.15), 0 1px 2px -1px rgb(0 0 0 / 0.15)",
-        "--ml-shadow-active": "0 10px 15px -3px rgb(0 0 0 / 0.15), 0 4px 6px -2px rgb(0 0 0 / 0.15)",
-        "--ml-c-link-1": "#333333",
-        "--ml-c-link-2": "#000000",
-        "--ml-c-logo-1": "#ffffff",
-        "--ml-c-logo-2": "#d7d7d7",
-        "--ml-c-geoloc": "#1da1f2"
+  theme: 'modern',
+  icons: 'lucide',
+  cssVars: {
+    light: {
+      '--ml-ctrl-border-radius': '1rem',
+      '--ml-font':
+        '16px/24px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
+      '--ml-font-attribution': 'inherit',
+      '--ml-c-bg-1': '#ffffff',
+      '--ml-c-bg-2': '#f0f0f0',
+      '--ml-c-bg-3': '#d7d7d7',
+      '--ml-c-icon-1': '#333333',
+      '--ml-c-icon-2': '#000000',
+      '--ml-c-active': '#1da1f2',
+      '--ml-c-error': '#e54e33',
+      '--ml-c-outline': '#dba726',
+      '--ml-o-disabled': '0.25',
+      '--ml-shadow': '0 1px 3px 0 rgb(0 0 0 / 0.15), 0 1px 2px -1px rgb(0 0 0 / 0.15)',
+      '--ml-shadow-active': '0 10px 15px -3px rgb(0 0 0 / 0.15), 0 4px 6px -2px rgb(0 0 0 / 0.15)',
+      '--ml-c-link-1': '#333333',
+      '--ml-c-link-2': '#000000',
+      '--ml-c-logo-1': '#ffffff',
+      '--ml-c-logo-2': '#d7d7d7',
+      '--ml-c-geoloc': '#1da1f2',
     },
-    "dark": {
-      "--ml-c-bg-1": "#111725",
-        "--ml-c-bg-2": "#414853",
-        "--ml-c-bg-3": "#32363f",
-        "--ml-c-icon-1": "#cbd5e1",
-        "--ml-c-icon-2": "#ffffff",
-        "--ml-shadow": "0 1px 3px 0 rgb(0 0 0 / 0.15), 0 1px 2px -1px rgb(0 0 0 / 0.15)",
-        "--ml-c-link-1": "#cbd5e1",
-        "--ml-c-link-2": "#ffffff",
-        "--ml-c-logo-1": "#111725",
-        "--ml-c-logo-2": "#32363f"
-    }
-  }
-}
+    dark: {
+      '--ml-c-bg-1': '#111725',
+      '--ml-c-bg-2': '#414853',
+      '--ml-c-bg-3': '#32363f',
+      '--ml-c-icon-1': '#cbd5e1',
+      '--ml-c-icon-2': '#ffffff',
+      '--ml-shadow': '0 1px 3px 0 rgb(0 0 0 / 0.15), 0 1px 2px -1px rgb(0 0 0 / 0.15)',
+      '--ml-c-link-1': '#cbd5e1',
+      '--ml-c-link-2': '#ffffff',
+      '--ml-c-logo-1': '#111725',
+      '--ml-c-logo-2': '#32363f',
+    },
+  },
+};

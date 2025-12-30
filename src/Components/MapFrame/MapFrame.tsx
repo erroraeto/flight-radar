@@ -5,17 +5,17 @@ import {
   // NavigationControl,
   // FullscreenControl,
   // ScaleControl,
-  // Marker,
-  // Popup,
+  Marker,
+  Popup,
   // GeolocateControl,
 } from 'react-map-gl/maplibre';
 // import { MapGLStyleSwitcher, type StyleItem } from 'map-gl-style-switcher/react-map-gl';
 import { type StyleItem } from 'map-gl-style-switcher/react-map-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-// import Plane from '../MapFrame/Plane';
+import Plane from '../MapFrame/Plane';
 import 'map-gl-style-switcher/dist/map-gl-style-switcher.css';
-// import { fetchPlanes } from './FetchPlanes';
-// import { getCountryByICAO } from './getByICAO';
+import { fetchPlanes } from './FetchPlanes';
+import { getCountryByICAO } from './getByICAO';
 import i18n from '../../i18n';
 // import { useTranslation } from 'react-i18next';
 import { themeLight, themeDark } from '../../Images';
@@ -28,8 +28,8 @@ import { Box, createTheme, FormControl, IconButton, InputLabel, MenuItem, Paper,
 // import GpsNotFixedIcon from "@mui/icons-material/GpsNotFixed";
 // import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 // import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import PublicIcon from '@mui/icons-material/Public';
@@ -97,36 +97,41 @@ export const MapFrame = () => {
   // });
   const [viewState, setViewState] = React.useState(INITIAL_VIEW);
 
-  const zoomIn = () => {mapRef?.current.zoomTo(viewState.zoom + 1, { duration: 300 })};
-  const zoomOut = () => {mapRef?.current.zoomTo(viewState.zoom - 1, { duration: 300 })};
+  const zoomIn = () => {
+    mapRef?.current.zoomTo(viewState.zoom + 1, { duration: 300 });
+  };
+  const zoomOut = () => {
+    mapRef?.current.zoomTo(viewState.zoom - 1, { duration: 300 });
+  };
   const locateUser = () => {
     if (!navigator.geolocation) {
-      setGeoStatus("off");
+      setGeoStatus('off');
       return alert('Geolocation is not supported');
     }
-    setGeoStatus("searching");
+    setGeoStatus('searching');
 
-    navigator.geolocation.getCurrentPosition( (pos) => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
         const { latitude, longitude } = pos.coords;
-
+        setGeolocate([latitude, longitude]);
         mapRef?.current.flyTo({
           center: [longitude, latitude],
-          zoom: 14,
+          zoom: 5,
           duration: 1000,
-        })
-        setGeoStatus("fixed");
+        });
+        setGeoStatus('fixed');
       },
       (error) => {
         console.log(error);
-        setGeoStatus("off");
+        setGeoStatus('off');
       },
       { enableHighAccuracy: true },
     );
-  }
-  const [geoStatus, setGeoStatus] = React.useState<GeoStatus>("off");
-  const [themeMode, setThemeMode] = React.useState<"light" | "dark">("light");
-  const [mapMode, setMapMode] = React.useState<"globe" | "mercator">("globe");
-  const [language, setLanguage] = React.useState<Language>("en");
+  };
+  const [geoStatus, setGeoStatus] = React.useState<GeoStatus>('off');
+  const [themeMode, setThemeMode] = React.useState<'light' | 'dark'>('light');
+  const [mapMode, setMapMode] = React.useState<'globe' | 'mercator'>('globe');
+  const [language, setLanguage] = React.useState<Language>('en');
   const languages = [
     { code: 'en', label: 'English' },
     { code: 'ru', label: 'Russian' },
@@ -141,57 +146,52 @@ export const MapFrame = () => {
       },
     },
   });
-  // React.useEffect(() => {
-  //   const map = mapRef.current?.getMap();
-  //   if (!map) return;
-  //   setMapLanguage(map, i18n.language as Language);
-  // }, [i18n.language]);
 
-  // const [geolocate, setGeolocate] = React.useState<number[] | null>(null);
+  const [geolocate, setGeolocate] = React.useState<number[] | null>(null);
   // const geolocateControlRef = React.useRef<any>(null);
-  //
-  // const [rawPlanes, setRawPlanes] = React.useState<React.ReactElement[] | null>(null);
-  // const [markers, setMarkers] = React.useState<React.ReactElement[] | null>(null);
-  // const [selectPlaneHex, setPlaneHex] = React.useState<string | null>(null);
-  //
-  // const timer = React.useRef<number>(null);
-  // React.useEffect(() => {
-  //   if (!geolocate) return;
-  //
-  //   const loadPlanes = async () => {
-  //     const [lat, lon] = geolocate;
-  //     const rawPlanes = await fetchPlanes(lat, lon);
-  //     setRawPlanes(rawPlanes);
-  //     const plane = rawPlanes.map((p: any, id: number) => (
-  //       <Marker
-  //         key={`marker-${id}`}
-  //         longitude={p.lon}
-  //         latitude={p.lat}
-  //         rotation={p.direction}
-  //         anchor="bottom"
-  //         onClick={(e) => {
-  //           e.originalEvent.stopPropagation();
-  //           setPlaneHex(p.hex);
-  //         }}
-  //       >
-  //         <Plane size={30} />
-  //       </Marker>
-  //     ));
-  //     setMarkers(plane);
-  //   };
-  //
-  //   loadPlanes();
-  //   if (timer.current) {
-  //     clearInterval(timer.current);
-  //   }
-  //   timer.current = window.setInterval(loadPlanes, 2000);
-  // }, [geolocate]);
-  //
-  // const activePlane: any = React.useMemo(() => {
-  //   if (!selectPlaneHex) return null;
-  //   return rawPlanes?.find((p: any) => p.hex === selectPlaneHex) ?? null;
-  // }, [rawPlanes, selectPlaneHex, mapStyle]);
-  //
+
+  const [rawPlanes, setRawPlanes] = React.useState<React.ReactElement[] | null>(null);
+  const [markers, setMarkers] = React.useState<React.ReactElement[] | null>(null);
+  const [selectPlaneHex, setPlaneHex] = React.useState<string | null>(null);
+
+  const timer = React.useRef<number>(null);
+  React.useEffect(() => {
+    if (!geolocate) return;
+
+    const loadPlanes = async () => {
+      const [lat, lon] = geolocate;
+      const rawPlanes = await fetchPlanes(lat, lon);
+      setRawPlanes(rawPlanes);
+      const plane = rawPlanes.map((p: any, id: number) => (
+        <Marker
+          key={`marker-${id}`}
+          longitude={p.lon}
+          latitude={p.lat}
+          rotation={p.direction}
+          anchor="bottom"
+          onClick={(e) => {
+            e.originalEvent.stopPropagation();
+            setPlaneHex(p.hex);
+          }}
+        >
+          <Plane size={30} />
+        </Marker>
+      ));
+      setMarkers(plane);
+    };
+
+    loadPlanes();
+    if (timer.current) {
+      clearInterval(timer.current);
+    }
+    timer.current = window.setInterval(loadPlanes, 2000);
+  }, [geolocate]);
+
+  const activePlane: any = React.useMemo(() => {
+    if (!selectPlaneHex) return null;
+    return rawPlanes?.find((p: any) => p.hex === selectPlaneHex) ?? null;
+  }, [rawPlanes, selectPlaneHex]);
+
   const setMapLanguage = (map: any, language: Language) => {
     if (!map?.isStyleLoaded()) return;
 
@@ -203,9 +203,7 @@ export const MapFrame = () => {
       const tf = layer.layout['text-field'];
       if (!tf) continue;
 
-      if (typeof tf === 'string' || Array.isArray(tf) || tf[0] == 'coalesce' && tf[0] == 'case') {
-
-        console.log(language);
+      if (typeof tf === 'string' || Array.isArray(tf) || (tf[0] == 'coalesce' && tf[0] == 'case')) {
         map.setLayoutProperty(layer.id, 'text-field', ['coalesce', ['get', `name:${language}`], ['get', 'name']]);
       }
     }
@@ -213,10 +211,9 @@ export const MapFrame = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+      <Box sx={{ position: 'relative', width: '100%', height: '100vh' }}>
         <Map
           ref={mapRef}
-          // key={i18n.language}
           initialViewState={INITIAL_VIEW}
           {...viewState}
           onMove={(e) => setViewState(e.viewState)}
@@ -229,15 +226,38 @@ export const MapFrame = () => {
             transition: 'all .3s ease',
           }}
           mapStyle={mapStyles[0].styleUrl}
-          // projection="globe"
           projection={mapMode}
           onLoad={() => {
-            // i18n.changeLanguage('en');
             const map = mapRef.current?.getMap();
             if (!map) return;
             setMapLanguage(map, language);
           }}
-        />
+        >
+          {markers}
+          {activePlane && (
+            <Popup
+              anchor="top"
+              longitude={Number(activePlane.lon)}
+              latitude={Number(activePlane.lat)}
+              onClose={() => setPlaneHex(null)}
+            >
+              <div className="popup-info">
+                <p className="popup-info__row">
+                  <span>Region:</span>
+                  <span>{getCountryByICAO(activePlane.reg, language) ?? 'Unknown'}</span>
+                </p>
+                <p className="popup-info__row">
+                  <span>Speed:</span>
+                  <span>{Math.round(activePlane.speed)} км/ч</span>
+                </p>
+                <p className="popup-info__row">
+                  <span>Altitude:</span>
+                  <span>{Math.round(activePlane.alt * 0.3048)} м</span>
+                </p>
+              </div>
+            </Popup>
+          )}
+        </Map>
         <Box
           sx={{
             position: 'absolute',
@@ -247,7 +267,6 @@ export const MapFrame = () => {
             bottom: 16,
             left: 16,
             gap: 1,
-            // width: 32,
           }}
         >
           <Paper
@@ -262,7 +281,6 @@ export const MapFrame = () => {
               <MyLocationButton status={geoStatus} />
             </ControlButton>
           </Paper>
-
           <Paper
             elevation={2}
             sx={{
@@ -281,54 +299,6 @@ export const MapFrame = () => {
               <RemoveIcon fontSize="small" />
             </ControlButton>
           </Paper>
-
-          {/*<Paper sx={{*/}
-          {/*  display: 'flex',*/}
-          {/*}}>*/}
-          {/*  <IconButton*/}
-          {/*    ref={themeMode}*/}
-          {/*    onClick={() => (openedRef ? close() : open())}*/}
-          {/*    // onMouseLeave={handleMouseLeave}*/}
-          {/*    // onMouseEnter={() => openedRef && open()}*/}
-          {/*    // icon={<BasemapIcon src={currentBasemap.icon} alt={currentBasemap.label} />}*/}
-          {/*    // tooltip={intl.formatMessage({ id: 'builder.controls.basemap' })}*/}
-          {/*    tooltipPlacement="right"*/}
-          {/*  />*/}
-          {/*  <Popover*/}
-          {/*    sx={{ pointerEvents: 'none', outline: 'none' }}*/}
-          {/*    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}*/}
-          {/*    transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}*/}
-          {/*    anchorEl={openedRef}*/}
-          {/*    open={Boolean(openedRef)}*/}
-          {/*    disableAutoFocus={true}*/}
-          {/*    disableEnforceFocus={true}*/}
-          {/*    slotProps={{*/}
-          {/*      paper: {*/}
-          {/*        onMouseOver: handleMouseOver,*/}
-          {/*        onMouseLeave: handleMouseLeave,*/}
-          {/*        sx: { pointerEvents: 'all', transform: 'translate(8px, -4px) !important' }*/}
-          {/*      }*/}
-          {/*    }}*/}
-          {/*  >*/}
-          {/*    <BasemapSelectorMenu menuItems={basemaps} onClickItem={handleBasemapChange} />*/}
-          {/*  </Popover>              */}
-          {/*</Paper>*/}
-
-          {/*<FormControlLabel*/}
-          {/*  sx={{*/}
-          {/*    backgroundColor: 'background.paper',*/}
-          {/*    m: 0,*/}
-          {/*    p: 0,*/}
-          {/*  }}*/}
-          {/*  control={<MaterialUISwitch sx={{ m: 1 }} />}*/}
-          {/*  label="Theme"*/}
-          {/*  onChange={(event) => {*/}
-          {/*    console.log(event);*/}
-          {/*    setThemeMode(themeMode == 'dark' ? 'light' : 'dark');*/}
-          {/*  }}*/}
-          {/*/>*/}
-
-
           <Paper
             elevation={2}
             sx={{
@@ -349,11 +319,9 @@ export const MapFrame = () => {
                 transition: 'all 0.25s ease',
               }}
             >
-              {themeMode == "dark" ? <DarkModeIcon /> : <LightModeIcon />}
+              {themeMode == 'dark' ? <DarkModeIcon /> : <LightModeIcon />}
             </IconButton>
           </Paper>
-
-
           <Paper
             elevation={2}
             sx={{
@@ -374,94 +342,10 @@ export const MapFrame = () => {
                 transition: 'all 0.25s ease',
               }}
             >
-              {mapMode == "globe" ? <PublicIcon /> : <MapIcon />}
+              {mapMode == 'globe' ? <PublicIcon /> : <MapIcon />}
             </IconButton>
           </Paper>
-
-          {/*<FormControl size='small' sx={{*/}
-          {/*  display: 'flex',*/}
-          {/*  alignItems: 'center',*/}
-          {/*  justifyContent: 'center',*/}
-          {/*}}>*/}
-          {/*  <Select*/}
-          {/*    label="Theme"*/}
-          {/*    value={themeMode}*/}
-          {/*    IconComponent={() => null}*/}
-          {/*    onChange={(e) => setThemeMode(e.target.value as "light" | "dark")}*/}
-          {/*    sx={{*/}
-          {/*      width: 32,*/}
-          {/*      height: 32,*/}
-          {/*      p: 0.5,*/}
-          {/*      display: 'flex',*/}
-          {/*      alignItems: 'center',*/}
-          {/*      justifyContent: 'center',*/}
-          {/*      borderRadius: 2,*/}
-          {/*      bgcolor: 'background.paper',*/}
-          {/*      '& .MuiSelect-select': {*/}
-          {/*        display: 'flex',*/}
-          {/*        alignItems: 'center',*/}
-          {/*        justifyContent: 'center',*/}
-          {/*        p: '0 !important',*/}
-          {/*      },*/}
-          {/*    }}>*/}
-          {/*    <MenuItem value="light" sx={{*/}
-          {/*      p: 0,*/}
-          {/*      m: 0.5,*/}
-          {/*      display: 'flex',*/}
-          {/*      justifyContent: 'center',*/}
-          {/*      borderRadius: 1,*/}
-          {/*      '&:hover': {*/}
-          {/*        borderColor: '#1976d2',*/}
-          {/*      },*/}
-          {/*    }}>*/}
-          {/*      <Box component="img" src={themeLight} alt="Light" width={32} height={32} borderRadius={2} padding={.5}/>*/}
-          {/*    </MenuItem>*/}
-          {/*    <MenuItem value="dark" sx={{*/}
-          {/*      p: 0,*/}
-          {/*      m: 0.5,*/}
-          {/*      display: 'flex',*/}
-          {/*      justifyContent: 'center',*/}
-          {/*      borderRadius: 1,*/}
-          {/*      '&:hover': {*/}
-          {/*        borderColor: '#1976d2',*/}
-          {/*      },*/}
-          {/*    }}>*/}
-          {/*      <Box component="img" src={themeDark} alt="Dark" width={32} height={32} borderRadius={2} padding={.5}/>*/}
-          {/*    </MenuItem>*/}
-          {/*  </Select>*/}
-          {/*</FormControl>*/}
-
-          {/*<Paper*/}
-          {/*  elevation={2}*/}
-          {/*  sx={{*/}
-          {/*    position: 'relative',*/}
-          {/*    display: 'flex',*/}
-          {/*    flexDirection: 'column',*/}
-          {/*    bgcolor: 'none',*/}
-          {/*  }}*/}
-          {/*>*/}
-          {/*  <FormControl size="small">*/}
-          {/*    <Select*/}
-          {/*      value={language}*/}
-          {/*      onChange={(e) => {*/}
-          {/*        const lang = e.target.value;*/}
-          {/*        i18n.changeLanguage(lang);*/}
-          {/*        setLanguage(lang);*/}
-          {/*        const map = mapRef.current?.getMap();*/}
-          {/*        if (!map) return;*/}
-          {/*        setMapLanguage(map, lang);*/}
-          {/*      }}*/}
-          {/*    >*/}
-          {/*      {languages.map((language) => (*/}
-          {/*        <MenuItem key={language.code} value={language.code}>*/}
-          {/*          {language.label}*/}
-          {/*        </MenuItem>*/}
-          {/*      ))}*/}
-          {/*    </Select>*/}
-          {/*  </FormControl>*/}
-          {/*</Paper>*/}
         </Box>
-
         <Box
           sx={{
             position: 'absolute',
@@ -471,7 +355,6 @@ export const MapFrame = () => {
             top: 16,
             right: 16,
             gap: 1,
-            // width: 32,
           }}
         >
           <Paper
@@ -508,73 +391,6 @@ export const MapFrame = () => {
             </FormControl>
           </Paper>
         </Box>
-
-        {/*<NavigationControl position="top-left" />*/}
-        {/*<GeolocateControl*/}
-        {/*  ref={geolocateControlRef}*/}
-        {/*  position="top-left"*/}
-        {/*  positionOptions={{ enableHighAccuracy: true }}*/}
-        {/*  trackUserLocation={true}*/}
-        {/*  // showUserHeading={true}*/}
-        {/*  fitBoundsOptions={{ maxZoom: 3 }}*/}
-        {/*  onGeolocate={(e) => {*/}
-        {/*    const { latitude, longitude } = e.coords;*/}
-        {/*    setGeolocate([latitude, longitude]);*/}
-        {/*    setViewState((vs) => ({*/}
-        {/*      ...vs,*/}
-        {/*      latitude,*/}
-        {/*      longitude,*/}
-        {/*    }));*/}
-        {/*  }}*/}
-        {/*/>*/}
-        {/*<FullscreenControl position="top-left" />*/}
-        {/*<ScaleControl />*/}
-
-        {/*<MapGLStyleSwitcher*/}
-        {/*  styles={mapStyles}*/}
-        {/*  activeStyleId={activeStyleId}*/}
-        {/*  theme={isDarkMode ? 'dark' : 'light'}*/}
-        {/*  showLabels={true}*/}
-        {/*  showImages={true}*/}
-        {/*  position="bottom-left"*/}
-        {/*  onBeforeStyleChange={(from, to) => {*/}
-        {/*    const style = mapStyles.find((s) => s.id === to.id);*/}
-        {/*    setMapStyle(style?.styleUrl as string);*/}
-        {/*    setActiveStyleId(to.id);*/}
-        {/*  }}*/}
-        {/*  // onStyleChange={handleStyleChange}*/}
-        {/*/>*/}
-        {/*{markers}*/}
-
-        {/*{activePlane && (*/}
-        {/*  <Popup*/}
-        {/*    anchor="top"*/}
-        {/*    longitude={Number(activePlane.lon)}*/}
-        {/*    latitude={Number(activePlane.lat)}*/}
-        {/*    closeButton={false}*/}
-        {/*    onClose={(e) => {*/}
-        {/*      if (e.target.toggleClassName('style-switcher')) {*/}
-        {/*        setPlaneHex(null);*/}
-        {/*      }*/}
-        {/*    }}*/}
-        {/*  >*/}
-        {/*    <div className="popup-info">*/}
-        {/*      <p className="popup-info__row">*/}
-        {/*        <span>{t('region')}:</span>*/}
-        {/*        <span>{getCountryByICAO(activePlane.reg, lang.current) ?? t('unknown')}</span>*/}
-        {/*      </p>*/}
-        {/*      <p className="popup-info__row">*/}
-        {/*        <span>{t('speed')}:</span>*/}
-        {/*        <span>{Math.round(activePlane.speed)} км/ч</span>*/}
-        {/*      </p>*/}
-        {/*      <p className="popup-info__row">*/}
-        {/*        <span>{t('altitude')}:</span>*/}
-        {/*        <span>{Math.round(activePlane.alt * 0.3048)} м</span>*/}
-        {/*      </p>*/}
-        {/*    </div>*/}
-        {/*  </Popup>*/}
-        {/*)}*/}
-        {/*</Map>*/}
       </Box>
     </ThemeProvider>
   );
