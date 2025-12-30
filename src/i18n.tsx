@@ -7,8 +7,8 @@ import kk from './Locales/kk.json';
 import ja from './Locales/ja.json';
 
 void i18n.use(initReactI18next).init({
-  // lng: 'en',
-  // fallbackLng: 'en',
+  lng: 'en',
+  fallbackLng: 'en',
   resources: {
     ru: { translation: ru },
     en: { translation: en },

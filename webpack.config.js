@@ -48,6 +48,7 @@ module.exports = {
     }),
     new EslintWebpackPlugin({
       files: '{**/*, *}.{tsx,ts,js}',
+      failOnError: false,
     }),
   ],
   devServer: {

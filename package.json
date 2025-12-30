@@ -40,6 +40,7 @@
     "map-gl-style-switcher": "^0.9.1",
     "maplibre-gl": "^5.13.0",
     "maplibre-gl-style-flipper": "^1.0.9",
+    "maplibre-theme": "^1.0.0",
     "node-fetch": "^3.3.2",
     "pmtiles": "^4.3.0",
     "pre-commit": "^1.2.2",

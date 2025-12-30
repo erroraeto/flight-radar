@@ -7,6 +7,5 @@ export function getCountryByICAO(icao: string, lan: Language) {
     .replace(/[^a-zA-Z0-9]/g, '')
     .toUpperCase();
   const nation = ICAO_NATIONALITY_MARKS.find((obj) => obj.codes.includes(prefix));
-  console.log(lan);
   if (nation) return nation[lan];
 }
