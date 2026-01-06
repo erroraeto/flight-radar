@@ -65,11 +65,11 @@ export const MapFrame = () => {
     setGeoStatus('searching');
 
     navigator.geolocation.getCurrentPosition(
-      // (pos) => {
-      () => {
-        // const { latitude, longitude } = pos.coords;
-        const latitude = 43.57;
-        const longitude = 39.74;
+      (pos) => {
+        // () => {
+        const { latitude, longitude } = pos.coords;
+        // const latitude = 43.57;
+        // const longitude = 39.74;
         setGeolocate([latitude, longitude]);
         mapRef?.current.flyTo({
           center: [longitude, latitude],
@@ -165,7 +165,7 @@ export const MapFrame = () => {
     <ThemeProvider theme={theme}>
       <Box
         className={themeMode == 'dark' ? 'dark' : 'light'}
-        sx={{ position: 'relative', width: '100%', height: '100vh', bgcolor: 'black' }}
+        sx={{ position: 'relative', width: '100%', height: '100dvh', bgcolor: 'black' }}
       >
         <Stars />
         <Map
@@ -175,7 +175,7 @@ export const MapFrame = () => {
           {...viewState}
           onMove={(e) => {
             setViewState(e.viewState);
-            if (e.originalEvent && geoStatus != 'searching') {
+            if (e.originalEvent && geoStatus != 'searching' && geoStatus != 'off') {
               setGeoStatus('manual');
             }
           }}
@@ -183,7 +183,7 @@ export const MapFrame = () => {
           maxZoom={18}
           style={{
             width: '100%',
-            height: '100vh',
+            height: '100dvh',
             backgroundColor: 'transparent',
             transition: 'all .3s ease',
           }}
