@@ -1,3 +1,4 @@
+import React from 'react';
 export type Language = 'en' | 'ru' | 'kk' | 'ja';
 
 export type PlaneProps = {

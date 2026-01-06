@@ -1,46 +1,45 @@
 import React from 'react';
 import './MapFrame.sass';
-import {
-  Map,
-  // NavigationControl,
-  // FullscreenControl,
-  // ScaleControl,
-  Marker,
-  Popup,
-  // GeolocateControl,
-} from 'react-map-gl/maplibre';
-// import { MapGLStyleSwitcher, type StyleItem } from 'map-gl-style-switcher/react-map-gl';
-import { type StyleItem } from 'map-gl-style-switcher/react-map-gl';
+import { Map, Marker, Popup } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import Plane from '../MapFrame/Plane';
 import 'map-gl-style-switcher/dist/map-gl-style-switcher.css';
 import { fetchPlanes } from './FetchPlanes';
 import { getCountryByICAO } from './getByICAO';
 import i18n from '../../i18n';
-// import { useTranslation } from 'react-i18next';
-import { themeLight, themeDark } from '../../Images';
 type Language = 'en' | 'ru' | 'kk' | 'ja';
 import { MapRef } from 'react-map-gl/maplibre';
-// import "maplibre-theme/icons.lucide.css";
-// import "maplibre-theme/modern.css";
-// import Voyager from "../../public/map/style1.json";
-import { Box, createTheme, FormControl, IconButton, InputLabel, MenuItem, Paper, Select } from '@mui/material';
-// import GpsNotFixedIcon from "@mui/icons-material/GpsNotFixed";
-// import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-// import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
+import {
+  Box,
+  createTheme,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  List,
+  ListItem,
+  Typography,
+  ListItemIcon,
+  Divider,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import PublicIcon from '@mui/icons-material/Public';
 import MapIcon from '@mui/icons-material/Map';
-// import MyLocationIcon from "@mui/icons-material/MyLocation";
-import { ControlButton } from '../ControlButton/ControlButton';
+import HeightIcon from '@mui/icons-material/Height';
+import SpeedIcon from '@mui/icons-material/Speed';
+import LanguageIcon from '@mui/icons-material/Language';
 import { DividerH } from '../Divider/Divider';
 import { MyLocationButton } from '../MyLocationButton';
 import { GeoStatus } from '../../utils';
 import { ThemeProvider } from '@mui/material/styles';
-// import { MaterialUISwitch } from '../MaterialSwitch';
+import { useTranslation } from 'react-i18next';
+import { MapAttribution } from './MapAttribution';
+import { Stars } from './Stars';
 
 const INITIAL_VIEW = {
   longitude: 37.6176,
@@ -50,53 +49,8 @@ const INITIAL_VIEW = {
 
 export const MapFrame = () => {
   const mapRef = React.useRef<MapRef>(null as unknown as MapRef);
-  // const lang = React.useRef<Language>('ru');
-  // const { t } = useTranslation();
-  const mapStyles: StyleItem[] = [
-    {
-      id: 'light',
-      name: 'Light',
-      image: themeLight,
-      styleUrl: `https://tiles.openfreemap.org/styles/bright`,
-      // styleUrl: `/map/dark.json`,
-      // styleUrl: `https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json`,
-      description: 'Light',
-    },
-    {
-      id: 'dark',
-      name: 'Dark',
-      image: themeDark,
-      // styleUrl: `https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json`,
-      styleUrl: `https://tiles.openfreemap.org/styles/bright`,
-      description: 'Dark',
-    },
-  ];
-  // const [mapStyle, setMapStyle] = React.useState(mapStyles[0].styleUrl);
-  // const mapStyle = React.useRef(mapStyles[0].styleUrl);
-  // const [activeStyleId, setActiveStyleId] = React.useState(mapStyles[0].id);
-  // const activeStyleId = React.useRef(mapStyles[0].id);
-  // const [isDarkMode, setIsDarkMode] = React.useState(() => {
-  //   return activeStyleId == 'dark';
-  // });
-  // React.useEffect(() => {
-  //   setIsDarkMode(activeStyleId == 'dark');
-  // }, [activeStyleId]);
-  // const handleStyleChange = (styleUrl: string) => {
-  //   setMapStyle(styleUrl);
-  //   console.log(styleUrl);
-  //   const style = mapStyles.find((s) => s.styleUrl === styleUrl);
-  //   if (style) {
-  //     setActiveStyleId(style.id);
-  //     console.log(`Style changed to: ${style.name}`);
-  //   }
-  // };
-  // const [viewState, setViewState] = React.useState({
-  //   longitude: 37.6176,
-  //   latitude: 55.7558,
-  //   zoom: 5,
-  // });
+  const mapStyle: string = `https://tiles.openfreemap.org/styles/bright`;
   const [viewState, setViewState] = React.useState(INITIAL_VIEW);
-
   const zoomIn = () => {
     mapRef?.current.zoomTo(viewState.zoom + 1, { duration: 300 });
   };
@@ -111,8 +65,11 @@ export const MapFrame = () => {
     setGeoStatus('searching');
 
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude } = pos.coords;
+      // (pos) => {
+      () => {
+        // const { latitude, longitude } = pos.coords;
+        const latitude = 43.57;
+        const longitude = 39.74;
         setGeolocate([latitude, longitude]);
         mapRef?.current.flyTo({
           center: [longitude, latitude],
@@ -138,6 +95,7 @@ export const MapFrame = () => {
     { code: 'kk', label: 'Kazakhstan' },
     { code: 'ja', label: 'Japan' },
   ];
+  const { t } = useTranslation();
   const theme = createTheme({
     palette: {
       primary: {
@@ -146,14 +104,10 @@ export const MapFrame = () => {
       },
     },
   });
-
   const [geolocate, setGeolocate] = React.useState<number[] | null>(null);
-  // const geolocateControlRef = React.useRef<any>(null);
-
   const [rawPlanes, setRawPlanes] = React.useState<React.ReactElement[] | null>(null);
   const [markers, setMarkers] = React.useState<React.ReactElement[] | null>(null);
   const [selectPlaneHex, setPlaneHex] = React.useState<string | null>(null);
-
   const timer = React.useRef<number>(null);
   React.useEffect(() => {
     if (!geolocate) return;
@@ -186,12 +140,10 @@ export const MapFrame = () => {
     }
     timer.current = window.setInterval(loadPlanes, 2000);
   }, [geolocate]);
-
   const activePlane: any = React.useMemo(() => {
     if (!selectPlaneHex) return null;
     return rawPlanes?.find((p: any) => p.hex === selectPlaneHex) ?? null;
   }, [rawPlanes, selectPlaneHex]);
-
   const setMapLanguage = (map: any, language: Language) => {
     if (!map?.isStyleLoaded()) return;
 
@@ -211,21 +163,31 @@ export const MapFrame = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ position: 'relative', width: '100%', height: '100vh' }}>
+      <Box
+        className={themeMode == 'dark' ? 'dark' : 'light'}
+        sx={{ position: 'relative', width: '100%', height: '100vh', bgcolor: 'black' }}
+      >
+        <Stars />
         <Map
           ref={mapRef}
           initialViewState={INITIAL_VIEW}
+          attributionControl={false}
           {...viewState}
-          onMove={(e) => setViewState(e.viewState)}
+          onMove={(e) => {
+            setViewState(e.viewState);
+            if (e.originalEvent && geoStatus != 'searching') {
+              setGeoStatus('manual');
+            }
+          }}
+          onClick={() => setPlaneHex(null)}
           maxZoom={18}
           style={{
             width: '100%',
             height: '100vh',
-            filter: themeMode == 'dark' ? 'invert(1) grayscale(1)' : '',
-            backgroundColor: themeMode == 'dark' ? '#b8b8b8' : '#f5f5f5',
+            backgroundColor: 'transparent',
             transition: 'all .3s ease',
           }}
-          mapStyle={mapStyles[0].styleUrl}
+          mapStyle={mapStyle}
           projection={mapMode}
           onLoad={() => {
             const map = mapRef.current?.getMap();
@@ -236,28 +198,91 @@ export const MapFrame = () => {
           {markers}
           {activePlane && (
             <Popup
-              anchor="top"
               longitude={Number(activePlane.lon)}
               latitude={Number(activePlane.lat)}
+              anchor="top"
+              closeButton={false}
+              closeOnClick={true}
               onClose={() => setPlaneHex(null)}
+              className="aircraft-popup"
             >
-              <div className="popup-info">
-                <p className="popup-info__row">
-                  <span>Region:</span>
-                  <span>{getCountryByICAO(activePlane.reg, language) ?? 'Unknown'}</span>
-                </p>
-                <p className="popup-info__row">
-                  <span>Speed:</span>
-                  <span>{Math.round(activePlane.speed)} км/ч</span>
-                </p>
-                <p className="popup-info__row">
-                  <span>Altitude:</span>
-                  <span>{Math.round(activePlane.alt * 0.3048)} м</span>
-                </p>
-              </div>
+              <List
+                className="list"
+                sx={{
+                  width: '100%',
+                  maxWidth: 360,
+                  p: 0,
+                  borderRadius: 2,
+                  border: 'thin solid #b0b0b0',
+                  background: 'linear-gradient(white 3%, rgba(255,255,255,.3))',
+                  boxShadow: 2,
+                  backdropFilter: 'blur(4px)',
+                }}
+              >
+                <ListItem alignItems="flex-start" sx={{ paddingInline: 2, paddingBlock: 1.5 }}>
+                  <ListItemIcon sx={{ minWidth: 0, m: 0, marginInlineEnd: 0.6 }}>
+                    <LanguageIcon />
+                  </ListItemIcon>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 1,
+                      width: '100%',
+                    }}
+                  >
+                    <Typography variant="body1">{t('region')}:</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {getCountryByICAO(activePlane.reg, language) ?? t('unknown')}
+                    </Typography>
+                  </Box>
+                </ListItem>
+                <Divider component="li" />
+                <ListItem alignItems="flex-start" sx={{ paddingInline: 2, paddingBlock: 1.5 }}>
+                  <ListItemIcon sx={{ minWidth: 0, m: 0, marginInlineEnd: 0.6 }}>
+                    <SpeedIcon />
+                  </ListItemIcon>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 1,
+                      width: '100%',
+                    }}
+                  >
+                    <Typography variant="body1">{t('speed')}:</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {activePlane.speed ? Math.round(activePlane.speed) + ' км/ч' : '—'}
+                    </Typography>
+                  </Box>
+                </ListItem>
+                <Divider component="li" />
+                <ListItem alignItems="flex-start" sx={{ paddingInline: 2, paddingBlock: 1.5 }}>
+                  <ListItemIcon sx={{ minWidth: 0, m: 0, marginInlineEnd: 0.6 }}>
+                    <HeightIcon />
+                  </ListItemIcon>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 1,
+                      width: '100%',
+                    }}
+                  >
+                    <Typography variant="body1">{t('altitude')}:</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {activePlane.alt ? Math.round(activePlane.alt * 0.3048) + ' м' : '—'}
+                    </Typography>
+                  </Box>
+                </ListItem>
+              </List>
             </Popup>
           )}
         </Map>
+        <MapAttribution />
         <Box
           sx={{
             position: 'absolute',
@@ -267,19 +292,30 @@ export const MapFrame = () => {
             bottom: 16,
             left: 16,
             gap: 1,
+            zIndex: 150,
           }}
         >
           <Paper
             elevation={2}
             sx={{
               position: 'relative',
+              display: 'flex',
               overflow: 'hidden',
               borderRadius: 2,
+              bgcolor: 'rgba(255,255,255,.7)',
+              backdropFilter: 'blur(3px)',
             }}
           >
-            <ControlButton onClick={locateUser}>
+            <IconButton
+              onClick={locateUser}
+              sx={{
+                width: 32,
+                height: 32,
+                borderRadius: 0,
+              }}
+            >
               <MyLocationButton status={geoStatus} />
-            </ControlButton>
+            </IconButton>
           </Paper>
           <Paper
             elevation={2}
@@ -289,15 +325,31 @@ export const MapFrame = () => {
               flexDirection: 'column',
               overflow: 'hidden',
               borderRadius: 2,
+              bgcolor: 'rgba(255,255,255,.7)',
+              backdropFilter: 'blur(3px)',
             }}
           >
-            <ControlButton onClick={zoomIn}>
+            <IconButton
+              onClick={zoomIn}
+              sx={{
+                width: 32,
+                height: 32,
+                borderRadius: 0,
+              }}
+            >
               <AddIcon fontSize="small" />
-            </ControlButton>
+            </IconButton>
             <DividerH />
-            <ControlButton onClick={zoomOut}>
+            <IconButton
+              onClick={zoomOut}
+              sx={{
+                width: 32,
+                height: 32,
+                borderRadius: 0,
+              }}
+            >
               <RemoveIcon fontSize="small" />
-            </ControlButton>
+            </IconButton>
           </Paper>
           <Paper
             elevation={2}
@@ -307,6 +359,8 @@ export const MapFrame = () => {
               flexDirection: 'column',
               overflow: 'hidden',
               borderRadius: 2,
+              bgcolor: 'rgba(255,255,255,.7)',
+              backdropFilter: 'blur(3px)',
             }}
           >
             <IconButton
@@ -330,6 +384,8 @@ export const MapFrame = () => {
               flexDirection: 'column',
               overflow: 'hidden',
               borderRadius: 2,
+              bgcolor: 'rgba(255,255,255,.7)',
+              backdropFilter: 'blur(3px)',
             }}
           >
             <IconButton
@@ -355,6 +411,8 @@ export const MapFrame = () => {
             top: 16,
             right: 16,
             gap: 1,
+            bgcolor: 'none',
+            zIndex: 150,
           }}
         >
           <Paper
@@ -365,13 +423,15 @@ export const MapFrame = () => {
               flexDirection: 'column',
               overflow: 'hidden',
               borderRadius: 2,
+              bgcolor: 'rgba(255,255,255,.7)',
+              backdropFilter: 'blur(3px)',
             }}
           >
             <FormControl sx={{ m: 1 }} size="small">
-              <InputLabel id="language-label">Language</InputLabel>
+              <InputLabel id="language-label">{t('language')}</InputLabel>
               <Select
                 labelId="language-label"
-                label="Language"
+                label={t('language')}
                 value={language}
                 onChange={(e) => {
                   const lang = e.target.value;

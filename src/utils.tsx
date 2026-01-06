@@ -6,7 +6,7 @@ type IcaoNationalityMark = {
   ja: string;
 };
 
-export type GeoStatus = 'off' | 'searching' | 'fixed';
+export type GeoStatus = 'off' | 'searching' | 'fixed' | 'manual';
 
 export const ICAO_NATIONALITY_MARKS: IcaoNationalityMark[] = [
   {
@@ -215,3 +215,122 @@ export const ThemeDark = {
     },
   },
 };
+
+// import type { IOptions, RecursivePartial } from "@tsparticles/engine";
+// export const particlesOptions: RecursivePartial<IOptions> = {
+//   particles: {
+//     number: {
+//       value: 600,
+//       density: {
+//         enable: true,
+//         area: 100,
+//       },
+//     },
+//     color: {
+//       value: "#ffffff",
+//     },
+//     shape: {
+//       type: "circle",
+//       stroke: {
+//         width: 0,
+//         color: "#000000",
+//       },
+//       polygon: {
+//         sides: 5,
+//       },
+//     },
+//     opacity: {
+//       value: 1,
+//       random: {
+//         enable: true,
+//       },
+//       animation: {
+//         enable: true,
+//         speed: 1,
+//         minimumValue: 0,
+//         sync: false,
+//       },
+//     },
+//     size: {
+//       value: 1,
+//       random: {
+//         enable: true,
+//       },
+//       animation: {
+//         enable: false,
+//         speed: 4,
+//         minimumValue: 0.3,
+//         sync: false,
+//       },
+//     },
+//     links: {
+//       enable: false,
+//       distance: 150,
+//       color: "#ffffff",
+//       opacity: 0.4,
+//       width: 1,
+//     },
+//     move: {
+//       enable: true,
+//       speed: 0.2,
+//       direction: "none",
+//       random: true,
+//       straight: false,
+//       outModes: {
+//         default: "out",
+//       },
+//       bounce: false,
+//       attract: {
+//         enable: false,
+//         rotate: {
+//           x: 200,
+//           y: 200,
+//         },
+//       },
+//     },
+//   },
+//
+//   interactivity: {
+//     detectsOn: "canvas",
+//     events: {
+//       onHover: {
+//         enable: false,
+//         mode: "repulse",
+//       },
+//       onClick: {
+//         enable: false,
+//         mode: "repulse",
+//       },
+//       resize: {
+//         enable: true,
+//       },
+//     },
+//     modes: {
+//       grab: {
+//         distance: 400,
+//         links: {
+//           opacity: 1,
+//         },
+//       },
+//       bubble: {
+//         distance: 250,
+//         size: 0,
+//         duration: 2,
+//         opacity: 0,
+//         speed: 3,
+//       },
+//       repulse: {
+//         distance: 400,
+//         duration: 0.4,
+//       },
+//       push: {
+//         quantity: 4,
+//       },
+//       remove: {
+//         quantity: 2,
+//       },
+//     },
+//   },
+//
+//   detectRetina: true,
+// };

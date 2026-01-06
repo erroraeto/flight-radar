@@ -12,14 +12,14 @@ export const ControlButton = ({ style, children, onClick }: any) => (
       alignItems: 'center',
       justifyContent: 'center',
       cursor: 'pointer',
-      bgcolor: 'background.paper',
-      transition: 'background-color 0.2s ease',
-      '&:hover': {
-        bgcolor: 'action.hover',
-      },
-      '&:active': {
-        bgcolor: 'action.selected',
-      },
+      // bgcolor: 'background.paper',
+      // transition: 'background-color 0.2s ease',
+      // '&:hover': {
+      //   bgcolor: 'action.hover',
+      // },
+      // '&:active': {
+      //   bgcolor: 'action.selected',
+      // },
       style,
     }}
   >
