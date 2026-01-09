@@ -1,0 +1,32 @@
+.maplibregl-canvas
+  transition: filter .3s ease
+
+.plane
+  cursor: pointer
+  fill: #007cff
+  filter: drop-shadow(0 0 2px rgba(0, 124, 255, 0.7))
+
+.aircraft-popup .maplibregl-popup-content
+  margin-top: -1.5px
+  padding: 0
+  background: transparent
+  box-shadow: none
+
+.aircraft-popup .maplibregl-popup-tip
+  position: relative
+  height: 12px
+  width: 24px
+  border: none
+  overflow: hidden
+
+.aircraft-popup .maplibregl-popup-tip::before
+  content: ''
+  position: absolute
+  height: 10px
+  width: 10px
+  transform: translate(50%,50%) rotate(45deg)
+  background: white
+  border-top: 1px solid #b0b0b0 !important
+  border-Left: 1px solid #b0b0b0 !important
+  border-bottom: none
+  border-right: none

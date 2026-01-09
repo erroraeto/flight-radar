@@ -1,10 +1,10 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import ru from './Locales/ru.json';
-import en from './Locales/en.json';
-import kk from './Locales/kk.json';
-import ja from './Locales/ja.json';
+import ru from './shared/locales/ru.json';
+import en from './shared/locales/en.json';
+import kk from './shared/locales/kk.json';
+import ja from './shared/locales/ja.json';
 
 void i18n.use(initReactI18next).init({
   lng: 'en',
