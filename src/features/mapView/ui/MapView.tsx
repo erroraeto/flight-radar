@@ -26,7 +26,7 @@ export const MapView = () => {
   // const mapStyle: string[] = [`/map-style__street.json`, `/map-style__dark.json`];
   const mapStyle: string[] = [
     `https://api.maptiler.com/maps/019ac204-df7d-7ada-844d-03122bbe7998/style.json?key=4L19oIKyIKZK0Cqronn5`,
-    `https://api.maptiler.com/maps/streets-v4-dark/style.json?key=4L19oIKyIKZK0Cqronn5`
+    `https://api.maptiler.com/maps/streets-v4-dark/style.json?key=4L19oIKyIKZK0Cqronn5`,
   ];
   const mapRef = useRef<MapRef | null>(null);
   const timer = useRef<number>(null);
