@@ -1,6 +1,3 @@
-import { MapRef } from 'react-map-gl/maplibre';
-import { Ref } from 'react';
-
 export interface MapState {
   view: {
     latitude: number;
