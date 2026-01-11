@@ -5,18 +5,22 @@ import { MapAttribution } from './features/mapAttribution';
 import { ButtonLocation } from './features/buttonLocation';
 import { ButtonZoom } from './features/buttonZoom';
 import { zoomIn, zoomOut, changeTheme, changeProjection, MapView } from './features/mapView';
-import { Box } from '@mui/material';
+import { Box, CssBaseline, ThemeProvider } from '@mui/material';
 import { ButtonTheme } from './features/buttonTheme';
 import { ButtonProjection } from './features/buttonProjection/ui/ButtonProjection';
 import { LangChanger } from './features/langChanger';
 import { useAppDispatch, useAppSelector } from './app/hooks';
+import { getAppTheme } from './shared/styles/theme';
+import { AppThemeBridge } from './shared/styles/AppThemeBridge';
 
 export const App = () => {
   const dispatch = useAppDispatch();
   const { theme, mapMode } = useAppSelector((state) => state.map);
 
   return (
-    <React.Fragment>
+    <ThemeProvider theme={getAppTheme(theme)}>
+      <CssBaseline />
+      <AppThemeBridge />
       <Box sx={{ position: 'relative', width: '100%', height: '100dvh', bgcolor: 'black' }}>
         <Stars />
         <MapView />
@@ -54,6 +58,6 @@ export const App = () => {
           <LangChanger />
         </Box>
       </Box>
-    </React.Fragment>
+    </ThemeProvider>
   );
 };

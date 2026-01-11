@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useMemo } from 'react';
-import './Map.sass';
 import { Layer, Map, MapRef, Source } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import 'map-gl-style-switcher/dist/map-gl-style-switcher.css';
@@ -23,11 +22,7 @@ export const MapView = () => {
   const { view, theme, mapMode, planes, targetPlane } = useAppSelector((state) => state.map);
   const { geoLocate, geoStatus } = useAppSelector((state) => state.location);
   const { lang } = useAppSelector((state) => state.language);
-  // const mapStyle: string[] = [`/map-style__street.json`, `/map-style__dark.json`];
-  const mapStyle: string[] = [
-    `https://api.maptiler.com/maps/019ac204-df7d-7ada-844d-03122bbe7998/style.json?key=4L19oIKyIKZK0Cqronn5`,
-    `https://api.maptiler.com/maps/streets-v4-dark/style.json?key=4L19oIKyIKZK0Cqronn5`,
-  ];
+  const mapStyle: string[] = [`/map-style__light.json`, `/map-style__dark.json`];
   const mapRef = useRef<MapRef | null>(null);
   const timer = useRef<number>(null);
   useEffect(() => {
@@ -67,8 +62,8 @@ export const MapView = () => {
       if (
         layer.type === 'symbol' &&
         layer.layout?.['text-field'] &&
-        layer.layout?.['text-field'] &&
-        layer.layout?.['text-field']?.[0] === 'coalesce'
+        layer.layout?.['text-field']?.[0] != 'to-string'
+        // && layer.layout?.['text-field']?.[0] === 'coalesce'
       ) {
         map.setLayoutProperty(layer.id, 'text-field', ['coalesce', ['get', `name:${lang}`], ['get', 'name']]);
       }
@@ -149,7 +144,9 @@ export const MapView = () => {
             }}
           />
         ))}
-        {activePlane && <PoppupPlaneInfo activePlane={activePlane} onClose={() => dispatch(setTargetPlane(null))} />}
+        {activePlane && (
+          <PoppupPlaneInfo theme={theme} activePlane={activePlane} onClose={() => dispatch(setTargetPlane(null))} />
+        )}
       </Map>
     </Box>
   );

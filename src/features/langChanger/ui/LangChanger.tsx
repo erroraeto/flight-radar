@@ -23,7 +23,6 @@ export const LangChanger = () => {
         flexDirection: 'column',
         overflow: 'hidden',
         borderRadius: 2,
-        bgcolor: 'rgba(255,255,255,.7)',
         backdropFilter: 'blur(3px)',
       }}
     >

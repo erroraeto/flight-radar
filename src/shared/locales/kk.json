@@ -2,6 +2,8 @@
   "language": "Тіл",
   "region": "Аймақ",
   "speed": "Жылдамдық",
+  "speedUnit": "км/сағ",
   "altitude": "Биіктік",
+  "altitudeUnit": "m",
   "unknown": "Белгісіз"
 }

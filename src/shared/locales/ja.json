@@ -2,6 +2,8 @@
   "language": "言語",
   "region": "地域",
   "speed": "速度",
+  "speedUnit": "km/h",
   "altitude": "高度",
+  "altitudeUnit": "m",
   "unknown": "不明"
 }

@@ -4,23 +4,34 @@ import { Box, Link } from '@mui/material';
 export const MapAttribution = () => {
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         position: 'absolute',
         bottom: 0,
         right: 0,
         px: 0.5,
         py: 0.5,
-        bgcolor: 'rgba(255,255,255,.35)',
+        bgcolor: theme.palette.background.default,
         borderTopLeftRadius: 6,
-        fontSize: 10,
+        // fontSize: 10,
         display: 'flex',
         alignItems: 'baseline',
         flexWrap: 'wrap',
         gap: 0.5,
-        boxShadow: 2,
+        boxShadow: `0px 0px 8px ${theme.palette.shadow.default}`,
         zIndex: 1000,
         backdropFilter: 'blur(2px)',
-      }}
+        transition: 'all .3s ease',
+        maxWidth: {
+          xs: '70vw',
+          sm: 'none',
+          md: 'none',
+        },
+        fontSize: {
+          xs: '8px',
+          sm: '10px',
+          md: '10px',
+        },
+      })}
     >
       <span>©</span>
       <Link href="https://maplibre.org/" target="_blank" rel="noopener noreferrer" underline="hover">

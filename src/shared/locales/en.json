@@ -2,6 +2,8 @@
   "language": "Language",
   "region": "Region",
   "speed": "Speed",
+  "speedUnit": "km/h",
   "altitude": "Altitude",
+  "altitudeUnit": "m",
   "unknown": "Unknown"
 }

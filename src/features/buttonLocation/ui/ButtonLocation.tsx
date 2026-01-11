@@ -30,14 +30,14 @@ export const ButtonLocation = () => {
   return (
     <Paper
       elevation={2}
-      sx={{
+      sx={(theme) => ({
         position: 'relative',
         display: 'flex',
         overflow: 'hidden',
         borderRadius: 2,
-        bgcolor: 'rgba(255,255,255,.7)',
+        boxShadow: `0px 0px 8px ${theme.palette.shadow.default}`,
         backdropFilter: 'blur(3px)',
-      }}
+      })}
     >
       <IconButton
         onClick={() => dispatch(getLocation())}

@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import './PoppupPlaneInfo.sass';
 import { Box, Divider, List, ListItem, ListItemIcon, Typography } from '@mui/material';
 import { PoppupPlaneInfoProps } from '../model/types';
 import { Popup } from 'react-map-gl/maplibre';
@@ -10,7 +11,7 @@ import { t } from 'i18next';
 import i18n from '../../../i18n';
 import { Language } from '../../../shared/lib/types';
 
-export const PoppupPlaneInfo: FC<PoppupPlaneInfoProps> = ({ activePlane, onClose }) => {
+export const PoppupPlaneInfo: FC<PoppupPlaneInfoProps> = ({ activePlane, onClose, theme }) => {
   return (
     <Popup
       latitude={Number(activePlane.lat)}
@@ -19,20 +20,21 @@ export const PoppupPlaneInfo: FC<PoppupPlaneInfoProps> = ({ activePlane, onClose
       closeButton={false}
       closeOnClick={true}
       onClose={onClose}
-      className="aircraft-popup"
+      className={`aircraft-popup ` + theme}
+      // data-theme={theme}
     >
       <List
         className="list"
-        sx={{
+        sx={(theme) => ({
           width: '100%',
           maxWidth: 360,
           p: 0,
           borderRadius: 2,
           border: 'thin solid #b0b0b0',
-          background: 'linear-gradient(white 3%, rgba(255,255,255,.3))',
+          background: `linear-gradient(${theme.palette.popup.fromColor} 3%, ${theme.palette.popup.toColor})`,
           boxShadow: 2,
           backdropFilter: 'blur(4px)',
-        }}
+        })}
       >
         <ListItem alignItems="flex-start" sx={{ paddingInline: 2, paddingBlock: 1.5 }}>
           <ListItemIcon sx={{ minWidth: 0, m: 0, marginInlineEnd: 0.6 }}>
@@ -69,7 +71,7 @@ export const PoppupPlaneInfo: FC<PoppupPlaneInfoProps> = ({ activePlane, onClose
           >
             <Typography variant="body1">{t('speed')}:</Typography>
             <Typography variant="body2" color="text.secondary">
-              {activePlane.speed ? Math.round(activePlane.speed) + ' км/ч' : '—'}
+              {activePlane.speed ? Math.round(activePlane.speed) + ` ${t('speedUnit')}` : '—'}
             </Typography>
           </Box>
         </ListItem>
@@ -89,7 +91,7 @@ export const PoppupPlaneInfo: FC<PoppupPlaneInfoProps> = ({ activePlane, onClose
           >
             <Typography variant="body1">{t('altitude')}:</Typography>
             <Typography variant="body2" color="text.secondary">
-              {activePlane.alt ? Math.round(activePlane.alt * 0.3048) + ' м' : '—'}
+              {activePlane.alt ? Math.round(activePlane.alt * 0.3048) + ` ${t('altitudeUnit')}` : '—'}
             </Typography>
           </Box>
         </ListItem>

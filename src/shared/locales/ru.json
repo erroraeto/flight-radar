@@ -2,6 +2,8 @@
   "language": "Язык",
   "region": "Регион",
   "speed": "Скорость",
+  "speedUnit": "км/ч",
   "altitude": "Высота",
+  "altitudeUnit": "м",
   "unknown": "Неизвестно"
 }
