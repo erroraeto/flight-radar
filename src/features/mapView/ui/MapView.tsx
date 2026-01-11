@@ -1,3 +1,4 @@
+/* global __webpack_public_path__ */
 import React, { useRef, useEffect, useMemo } from 'react';
 import { Layer, Map, MapRef, Source } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -23,10 +24,7 @@ export const MapView = () => {
   const { geoLocate, geoStatus } = useAppSelector((state) => state.location);
   const { lang } = useAppSelector((state) => state.language);
   const base = __webpack_public_path__;
-  const mapStyle: string[] = [
-    `${base}map-style__light.json`,
-    `${base}map-style__dark.json`,
-  ];
+  const mapStyle: string[] = [`${base}map-style__light.json`, `${base}map-style__dark.json`];
   const mapRef = useRef<MapRef | null>(null);
   const timer = useRef<number>(null);
   useEffect(() => {
