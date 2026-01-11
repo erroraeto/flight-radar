@@ -7,8 +7,9 @@ module.exports = {
   mode: process.env.NODE_ENV || 'production',
   entry: './src/script.tsx',
   output: {
-    path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.[contenthash].js',
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -55,9 +56,12 @@ module.exports = {
     open: true,
     port: 3000,
     historyApiFallback: true,
+    static: {
+      directory: path.resolve(__dirname, 'public'),
+    },
     proxy: [
       {
-        context: ['/adsb'], // все запросы, начинающиеся с /adsb
+        context: ['/adsb'],
         target: 'https://api.adsb.lol',
         changeOrigin: true,
         secure: true,

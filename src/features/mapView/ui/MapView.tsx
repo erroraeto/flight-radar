@@ -22,7 +22,11 @@ export const MapView = () => {
   const { view, theme, mapMode, planes, targetPlane } = useAppSelector((state) => state.map);
   const { geoLocate, geoStatus } = useAppSelector((state) => state.location);
   const { lang } = useAppSelector((state) => state.language);
-  const mapStyle: string[] = [`/map-style__light.json`, `/map-style__dark.json`];
+  const base = __webpack_public_path__;
+  const mapStyle: string[] = [
+    `${base}map-style__light.json`,
+    `${base}map-style__dark.json`,
+  ];
   const mapRef = useRef<MapRef | null>(null);
   const timer = useRef<number>(null);
   useEffect(() => {
