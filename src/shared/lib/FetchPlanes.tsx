@@ -1,9 +1,8 @@
 export const fetchPlanes = async (lat: number, lon: number) => {
   try {
     const radius = 350;
-    const response = await fetch(
-      `https://stalwart-ganache-e22d49.netlify.app/.netlify/functions/adsb?lat=${lat}&lon=${lon}&dist=${radius}`,
-    );
+    const proxyUrl = 'https://ncrkplbvvdmhnticqrxw.supabase.co/functions/v1/adsb-proxy';
+    const response = await fetch(`${proxyUrl}?lat=${lat}&lon=${lon}&dist=${radius}`);
     const data = await response.json();
     return data.ac.map((plane: any) => ({
       lat: plane.lat,

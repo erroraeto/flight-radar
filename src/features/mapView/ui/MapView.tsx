@@ -1,4 +1,3 @@
-/* global __webpack_public_path__ */
 import React, { useRef, useEffect, useMemo } from 'react';
 import { Layer, Map, MapRef, Source } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -13,18 +12,14 @@ import { setGeoStatus } from '../../buttonLocation/';
 import { MarkerPlane } from '../../markerPlane';
 
 export const MapView = () => {
-  // // const mapStyle: string = `https://tiles.openfreemap.org/styles/bright`;
-  // // const mapStyle: string = `https://api.maptiler.com/maps/019ac1e2-7e58-7804-baec-880aab07fcd5/style.json?key=4L19oIKyIKZK0Cqronn5`;
-  // // const mapStyle: string = `https://basemaps.cartocdn.com/gl/positron-gl-style/style.json`;
-  // // const mapStyle: string = `https://api.maptiler.com/maps/019ac204-df7d-7ada-844d-03122bbe7998/style.json?key=4L19oIKyIKZK0Cqronn5`;
-  // // const mapStyle: string = `https://api.maptiler.com/maps/streets-v4-dark/style.json?key=4L19oIKyIKZK0Cqronn5`;
-
   const dispatch = useAppDispatch();
   const { view, theme, mapMode, planes, targetPlane } = useAppSelector((state) => state.map);
   const { geoLocate, geoStatus } = useAppSelector((state) => state.location);
   const { lang } = useAppSelector((state) => state.language);
-  const base = __webpack_public_path__;
-  const mapStyle: string[] = [`${base}map-style__light.json`, `${base}map-style__dark.json`];
+  const mapStyle: string[] = [
+    `https://ncrkplbvvdmhnticqrxw.supabase.co/storage/v1/object/public/map_styles/map-style__light.json`,
+    `https://ncrkplbvvdmhnticqrxw.supabase.co/storage/v1/object/public/map_styles/map-style__dark.json`,
+  ];
   const mapRef = useRef<MapRef | null>(null);
   const timer = useRef<number>(null);
   useEffect(() => {

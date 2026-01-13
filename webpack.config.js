@@ -9,7 +9,6 @@ module.exports = {
   output: {
     filename: 'bundle.[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/flight-radar/',
   },
   module: {
     rules: [

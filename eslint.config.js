@@ -19,6 +19,7 @@ module.exports = defineConfig([
         module: 'readonly',
         __dirname: 'readonly',
         process: 'readonly',
+        Deno: 'readonly',
       },
     },
   },
