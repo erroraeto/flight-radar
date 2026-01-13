@@ -8,10 +8,7 @@ export const AppThemeBridge = () => {
     <GlobalStyles
       styles={{
         ':root': {
-          // '--popup-bg': theme.palette.background.paper,
-          // '--popup-text': theme.palette.text.primary,
           '--popup-from-color': theme.palette.popup.fromColor,
-          // '--popup-link': theme.palette.primary.main,
         },
       }}
     />

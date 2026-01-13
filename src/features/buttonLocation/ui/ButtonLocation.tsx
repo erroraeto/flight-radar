@@ -4,7 +4,7 @@ import GpsFixed from '@mui/icons-material/GpsFixed';
 import GpsNotFixed from '@mui/icons-material/GpsNotFixed';
 import { keyframes } from '@mui/system';
 import { getLocation } from '../lib/thunks';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '@app/hooks';
 
 const rotate = keyframes`
   from { transform: rotate(0deg); }

@@ -1,17 +1,17 @@
 import React from 'react';
-import './App.sass';
-import { Stars } from './features/backgroundStars';
-import { MapAttribution } from './features/mapAttribution';
-import { ButtonLocation } from './features/buttonLocation';
-import { ButtonZoom } from './features/buttonZoom';
-import { zoomIn, zoomOut, changeTheme, changeProjection, MapView } from './features/mapView';
+import '@shared/styles/App.sass';
+import { Stars } from '@features/backgroundStars';
+import { MapAttribution } from '@features/mapAttribution';
+import { ButtonLocation } from '@features/buttonLocation';
+import { ButtonZoom } from '@features/buttonZoom';
+import { zoomIn, zoomOut, changeTheme, changeProjection, MapView } from '@features/mapView';
 import { Box, CssBaseline, ThemeProvider } from '@mui/material';
-import { ButtonTheme } from './features/buttonTheme';
-import { ButtonProjection } from './features/buttonProjection/ui/ButtonProjection';
-import { LangChanger } from './features/langChanger';
-import { useAppDispatch, useAppSelector } from './app/hooks';
-import { getAppTheme } from './shared/styles/theme';
-import { AppThemeBridge } from './shared/styles/AppThemeBridge';
+import { ButtonTheme } from '@features/buttonTheme';
+import { ButtonProjection } from '@features/buttonProjection';
+import { LangChanger } from '@features/langChanger';
+import { useAppDispatch, useAppSelector } from '@app/hooks';
+import { getAppTheme } from '@shared/styles/theme';
+import { AppThemeBridge } from '@shared/styles/AppThemeBridge';
 
 export const App = () => {
   const dispatch = useAppDispatch();

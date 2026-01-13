@@ -1,4 +1,4 @@
-import { Theme } from '../../../shared/lib/types';
+import { Theme } from '@shared/lib/types';
 
 export interface ButtonThemeProps {
   onThemeMode: () => void;

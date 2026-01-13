@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { LanguageProps } from './types';
-import i18n from '../../../i18n';
+import i18n from '@shared/lib/i18n/config';
 
 const initialState: LanguageProps = {
   lang: 'en',

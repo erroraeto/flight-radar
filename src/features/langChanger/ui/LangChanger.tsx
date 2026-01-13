@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormControl, InputLabel, MenuItem, Paper, Select } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { t } from 'i18next';
 import { setLanguage } from '../model/langChangerSlice';
 

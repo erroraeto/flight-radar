@@ -1,4 +1,4 @@
-import { IcaoNationalityMark } from './types';
+import { IcaoNationalityMark } from '../types';
 
 export const ICAO_NATIONALITY_MARKS: IcaoNationalityMark[] = [
   {

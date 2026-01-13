@@ -2,11 +2,11 @@ import React, { useRef, useEffect, useMemo } from 'react';
 import { Layer, Map, MapRef, Source } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import 'map-gl-style-switcher/dist/map-gl-style-switcher.css';
-import { fetchPlanes } from '../../../shared/lib/FetchPlanes';
+import { fetchPlanes } from '@shared/api/fetchPlanes';
 import { Box } from '@mui/material';
 import { PoppupPlaneInfo } from '../../poppupPlaneInfo';
 
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { setViewState, setPlanes, setTargetPlane } from '../index';
 import { setGeoStatus } from '../../buttonLocation/';
 import { MarkerPlane } from '../../markerPlane';

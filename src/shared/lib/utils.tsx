@@ -1,4 +1,4 @@
-import { ICAO_NATIONALITY_MARKS } from './ICAO';
+import { ICAO_NATIONALITY_MARKS } from './constants/icao';
 import { Language } from './types';
 
 export function getCountryByICAO(icao: string, lan: Language) {

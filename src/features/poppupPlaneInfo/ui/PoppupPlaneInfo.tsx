@@ -4,12 +4,12 @@ import { Box, Divider, List, ListItem, ListItemIcon, Typography } from '@mui/mat
 import { PoppupPlaneInfoProps } from '../model/types';
 import { Popup } from 'react-map-gl/maplibre';
 import SpeedIcon from '@mui/icons-material/Speed';
-import { getCountryByICAO } from '../../../shared/lib/utils';
+import { getCountryByICAO } from '@shared/lib/utils';
 import HeightIcon from '@mui/icons-material/Height';
 import LanguageIcon from '@mui/icons-material/Language';
 import { t } from 'i18next';
-import i18n from '../../../i18n';
-import { Language } from '../../../shared/lib/types';
+import i18n from '@shared/lib/i18n/config';
+import { Language } from '@shared/lib/types';
 
 export const PoppupPlaneInfo: FC<PoppupPlaneInfoProps> = ({ activePlane, onClose, theme }) => {
   return (
