@@ -12,8 +12,8 @@ module.exports = {
     filename: 'js/[name].[contenthash:8].js',
     chunkFilename: 'js/[name].[contenthash:8].chunk.js',
     path: path.resolve(__dirname, 'dist'),
-    // publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
-    publicPath: './',
+    publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+    // publicPath: './',
     clean: true,
   },
   module: {
@@ -55,8 +55,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       favicon: './public/favicon.svg',
-      // publicPath: process.env.NODE_ENV === 'development' ? './' : '/',
-      publicPath: './',
+      publicPath: process.env.NODE_ENV === 'development' ? './' : '/',
+      // publicPath: './',
     }),
     new CopyWebpackPlugin({
       patterns: [
