@@ -12,7 +12,8 @@ module.exports = {
     filename: 'js/[name].[contenthash:8].js',
     chunkFilename: 'js/[name].[contenthash:8].chunk.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+    // publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+    publicPath: './',
     clean: true,
   },
   module: {
