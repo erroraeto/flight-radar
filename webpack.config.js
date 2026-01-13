@@ -13,7 +13,7 @@ module.exports = {
     chunkFilename: 'js/[name].[contenthash:8].chunk.js',
     path: path.resolve(__dirname, 'dist'),
     // publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
-    publicPath: './',
+    publicPath: process.env.NODE_ENV === 'development' ? './' : '/',
     clean: true,
   },
   module: {
@@ -55,7 +55,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       favicon: './public/favicon.svg',
-      publicPath: './',
+      publicPath: process.env.NODE_ENV === 'development' ? './' : '/',
     }),
     new CopyWebpackPlugin({
       patterns: [
