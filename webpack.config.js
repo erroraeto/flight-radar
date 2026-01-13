@@ -55,7 +55,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       favicon: './public/favicon.svg',
-      publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+      publicPath: './',
     }),
     new CopyWebpackPlugin({
       patterns: [
